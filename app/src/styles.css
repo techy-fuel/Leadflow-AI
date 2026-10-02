@@ -1,0 +1,252 @@
+/* AutoPilot CRM — Webfonts
+   Plus Jakarta Sans (display + body) · JetBrains Mono (metrics/code)
+   Served from Google Fonts CDN; @font-face rules below are shipped to consumers. */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=JetBrains+Mono:wght@400;500;600&display=swap');
+/* AutoPilot CRM — Color tokens
+   Brand: deep navy + emerald green on white. Premium SaaS. */
+
+:root {
+  /* ---- Brand: Navy (primary) ---- */
+  --navy-950: #06121F;
+  --navy-900: #0A2540; /* primary brand navy */
+  --navy-800: #0E2E4D;
+  --navy-700: #143A60;
+  --navy-600: #1C4D7C;
+  --navy-500: #2A6499;
+  --navy-400: #5285B3;
+  --navy-300: #8DB0CF;
+  --navy-200: #C2D6E7;
+  --navy-100: #E3EDF5;
+  --navy-50:  #F2F7FB;
+
+  /* ---- Brand: Emerald (accent) ---- */
+  --emerald-900: #064E3B;
+  --emerald-800: #065F46;
+  --emerald-700: #047857;
+  --emerald-600: #059669; /* primary accent */
+  --emerald-500: #10B981;
+  --emerald-400: #34D399;
+  --emerald-300: #6EE7B7;
+  --emerald-200: #A7F3D0;
+  --emerald-100: #D1FAE5;
+  --emerald-50:  #ECFDF5;
+
+  /* ---- Neutrals: Slate ---- */
+  --slate-950: #020617;
+  --slate-900: #0F172A;
+  --slate-800: #1E293B;
+  --slate-700: #334155;
+  --slate-600: #475569;
+  --slate-500: #64748B;
+  --slate-400: #94A3B8;
+  --slate-300: #CBD5E1;
+  --slate-200: #E2E8F0;
+  --slate-150: #EDF1F6;
+  --slate-100: #F1F5F9;
+  --slate-50:  #F8FAFC;
+  --white:     #FFFFFF;
+  --black:     #000000;
+
+  /* ---- Semantic status ---- */
+  --green-600: #059669;
+  --green-100: #D1FAE5;
+  --amber-600: #D97706;
+  --amber-500: #F59E0B;
+  --amber-100: #FEF3C7;
+  --red-600:   #DC2626;
+  --red-500:   #EF4444;
+  --red-100:   #FEE2E2;
+  --blue-600:  #2563EB;
+  --blue-100:  #DBEAFE;
+  --violet-600:#7C3AED;
+  --violet-100:#EDE9FE;
+
+  /* ---- Lead-score temperature ---- */
+  --lead-hot:   #EF4444;
+  --lead-hot-bg:#FEF0F0;
+  --lead-warm:  #F59E0B;
+  --lead-warm-bg:#FEF7EA;
+  --lead-cold:  #2563EB;
+  --lead-cold-bg:#EFF4FE;
+
+  /* ============ Semantic aliases ============ */
+  /* Surfaces */
+  --bg-app:          var(--slate-50);
+  --surface-card:    var(--white);
+  --surface-raised:  var(--white);
+  --surface-sunken:  var(--slate-50);
+  --surface-navy:    var(--navy-900);
+  --surface-glass:   rgba(255, 255, 255, 0.72);
+  --surface-glass-navy: rgba(10, 37, 64, 0.55);
+
+  /* Text */
+  --text-strong:  var(--navy-900);
+  --text-body:    var(--slate-700);
+  --text-muted:   var(--slate-500);
+  --text-subtle:  var(--slate-400);
+  --text-inverse: var(--white);
+  --text-accent:  var(--emerald-700);
+  --text-link:    var(--navy-600);
+
+  /* Borders / lines */
+  --border-soft:   var(--slate-200);
+  --border-strong: var(--slate-300);
+  --border-navy:   var(--navy-800);
+  --divider:       var(--slate-150);
+
+  /* Interactive */
+  --accent:           var(--emerald-600);
+  --accent-hover:     var(--emerald-700);
+  --accent-soft:      var(--emerald-50);
+  --primary:          var(--navy-900);
+  --primary-hover:    var(--navy-800);
+  --focus-ring:       rgba(16, 185, 129, 0.35);
+
+  /* ---- Signature gradients ---- */
+  --gradient-brand:   linear-gradient(135deg, #0A2540 0%, #0E3A52 55%, #047857 100%); /* @kind other */
+  --gradient-emerald: linear-gradient(135deg, #10B981 0%, #059669 100%); /* @kind other */
+  --gradient-navy:    linear-gradient(160deg, #0E2E4D 0%, #0A2540 100%); /* @kind other */
+  --gradient-mesh:    radial-gradient(120% 120% at 0% 0%, rgba(16,185,129,0.18) 0%, rgba(16,185,129,0) 45%),
+                      radial-gradient(120% 120% at 100% 0%, rgba(42,100,153,0.18) 0%, rgba(42,100,153,0) 50%); /* @kind other */
+  --glow-emerald:     0 0 0 1px rgba(16,185,129,0.2), 0 8px 32px rgba(16,185,129,0.28); /* @kind shadow */
+}
+/* AutoPilot CRM — Typography tokens */
+
+:root {
+  /* Families */
+  --font-display: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:    'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Type scale (px) — 1.25 major-third-ish, tuned for dashboards */
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 14px;   /* default UI body */
+  --text-md:   15px;
+  --text-lg:   17px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  30px;
+  --text-4xl:  38px;
+  --text-5xl:  48px;
+  --text-6xl:  60px;
+  --text-7xl:  76px;
+
+  /* Weights */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+  --weight-extra:    800;
+
+  /* Line heights */
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  /* Letter spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-snug:   -0.01em;
+  --tracking-normal: 0;
+  --tracking-wide:   0.04em;
+  --tracking-caps:   0.08em;
+
+  /* Semantic roles */
+  --type-display:  var(--weight-extra) var(--text-5xl)/var(--leading-tight) var(--font-display);
+  --type-h1:       var(--weight-bold)  var(--text-3xl)/var(--leading-snug) var(--font-display);
+  --type-h2:       var(--weight-bold)  var(--text-2xl)/var(--leading-snug) var(--font-display);
+  --type-h3:       var(--weight-semibold) var(--text-xl)/var(--leading-snug) var(--font-display);
+  --type-body:     var(--weight-regular) var(--text-base)/var(--leading-normal) var(--font-body);
+  --type-label:    var(--weight-semibold) var(--text-sm)/var(--leading-snug) var(--font-body);
+  --type-caption:  var(--weight-medium) var(--text-xs)/var(--leading-snug) var(--font-body);
+  --type-metric:   var(--weight-bold) var(--text-3xl)/var(--leading-tight) var(--font-display);
+  --type-mono:     var(--weight-medium) var(--text-sm)/var(--leading-normal) var(--font-mono);
+}
+/* AutoPilot CRM — Spacing, radii, shadows, motion */
+
+:root {
+  /* Spacing — 4px base */
+  --space-0:  0;
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* Radii — generous, premium */
+  --radius-xs:   6px;
+  --radius-sm:   10px;
+  --radius-md:   14px;
+  --radius-lg:   18px;   /* default card */
+  --radius-xl:   24px;
+  --radius-2xl:  32px;
+  --radius-pill: 999px;
+
+  /* Shadows — soft, layered, navy-tinted */
+  --shadow-xs:   0 1px 2px rgba(10, 37, 64, 0.06);
+  --shadow-sm:   0 1px 3px rgba(10, 37, 64, 0.08), 0 1px 2px rgba(10, 37, 64, 0.04);
+  --shadow-md:   0 4px 12px rgba(10, 37, 64, 0.08), 0 2px 4px rgba(10, 37, 64, 0.04);
+  --shadow-lg:   0 12px 28px rgba(10, 37, 64, 0.10), 0 4px 8px rgba(10, 37, 64, 0.05);
+  --shadow-xl:   0 24px 56px rgba(10, 37, 64, 0.14), 0 8px 16px rgba(10, 37, 64, 0.06);
+  --shadow-card: 0 1px 2px rgba(10,37,64,0.04), 0 8px 24px rgba(10,37,64,0.06);
+  --shadow-pop:  0 16px 48px rgba(10,37,64,0.18);
+  --shadow-focus: 0 0 0 4px var(--focus-ring);
+
+  /* Glass */
+  --blur-glass: blur(18px) saturate(1.4); /* @kind other */
+
+  /* Motion */
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1); /* @kind other */
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1); /* @kind other */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1); /* @kind other */
+  --dur-fast:    140ms; /* @kind other */
+  --dur-base:    220ms; /* @kind other */
+  --dur-slow:    400ms; /* @kind other */
+
+  /* Layout */
+  --sidebar-w:    256px;
+  --sidebar-w-sm: 72px;
+  --topbar-h:     64px;
+  --container:    1280px;
+}
+
+/* LeadFlow overrides: brief palette (blue + violet AI) on the design-system tokens */
+:root{--navy-950:#0B2E4F;--navy-900:#0F4C81;--navy-800:#0D4170;--navy-700:#13589A;--navy-600:#1A6CB5;--navy-500:#1E88E5;--navy-400:#5AA7EC;--navy-300:#93C5F3;--navy-200:#C4DDF7;--navy-100:#E3EFFB;--navy-50:#F2F8FE;
+--emerald-800:#166534;--emerald-700:#15803D;--emerald-600:#16A34A;--emerald-500:#22C55E;--emerald-200:#BBF7D0;--emerald-100:#DCFCE7;--emerald-50:#F0FDF4;
+--violet-600:#5B4FD6;--violet-100:#ECEBFD;--ai:#5B4FD6;--ai-soft:#F4F3FF;--ai-line:#DEDBFB;
+--text-strong:#0F172A;--text-muted:#64748B;--border-soft:#E5E7EB;--bg-app:#F8FAFC;
+--focus-ring:rgba(30,136,229,.3);--glow-ai:0 0 0 1px rgba(91,79,214,.2),0 8px 28px rgba(91,79,214,.18);}
+html,body,#root{margin:0;height:100%}
+body{background:#F8FAFC;font-family:var(--font-body);color:#0F172A;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:#1E88E5;text-decoration:none}
+button{font-family:inherit}
+@keyframes lfPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes lfIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+.h1{margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A}
+.sub{margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)}
+.card-h{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F1F5F9}
+.card-t{font:700 15px/1.2 var(--font-display);color:#0F172A}
+.eyebrow{font:700 10px/1 var(--font-display);letter-spacing:.08em}
+.link{font:600 13px/1 var(--font-display);color:#1E88E5;cursor:pointer;background:none;border:0;padding:0}
+.hov:hover{background:#F8FAFC}
+.page{max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px}
+.row{display:flex;align-items:center}
+.sk{background:#EEF1F5;animation:lfPulse 1.2s infinite;border-radius:6px}
+.sidebar-collapsed-hide{display:none}
+@media (max-width:900px){
+  .page{padding:16px}
+  .grid-2{grid-template-columns:1fr!important}
+  .hide-sm{display:none!important}
+}
+@media (min-width:901px){.show-sm{display:none!important}}
