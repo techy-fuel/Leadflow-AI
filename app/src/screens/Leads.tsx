@@ -109,7 +109,8 @@ const variants: Record<string, string> = {
 
 export function LeadDetail() {
   const go = useGo();
-  const cur = 2;
+  const [cur, setCur] = useState(2);
+  const [sheet, setSheet] = useState(false);
   const [reply, setReply] = useState(REPLY);
   const [loading, setLoading] = useState(false);
   const [draft, setDraft] = useState('');
@@ -133,8 +134,17 @@ export function LeadDetail() {
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: `repeat(${stageOrder.length},minmax(0,1fr))`, background: '#fff', border: '1px solid #E5E7EB', borderRadius: 14, overflow: 'hidden' }}>
-        {stageOrder.map((s, i) => <div key={s} style={{ padding: '11px 4px', textAlign: 'center', font: '600 12px/1 var(--font-display)', background: i < cur ? '#EEF5FD' : i === cur ? '#0F4C81' : '#fff', color: i < cur ? '#0F4C81' : i === cur ? '#fff' : '#94A3B8', borderRight: '1px solid #F1F5F9', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{s}</div>)}
+        {stageOrder.map((s, i) => <div key={s} onClick={() => setSheet(true)} title="Change stage" style={{ padding: '11px 4px', textAlign: 'center', font: '600 12px/1 var(--font-display)', background: i < cur ? '#EEF5FD' : i === cur ? '#0F4C81' : '#fff', color: i < cur ? '#0F4C81' : i === cur ? '#fff' : '#94A3B8', borderRight: '1px solid #F1F5F9', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', cursor: 'pointer' }}>{s}</div>)}
       </div>
+      {sheet && (
+        <div onClick={() => setSheet(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,.36)', zIndex: 50, display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div onClick={e => e.stopPropagation()} style={{ width: 'min(420px,100%)', background: '#fff', borderRadius: '24px 24px 0 0', padding: '10px 18px 30px', display: 'flex', flexDirection: 'column', gap: 6, animation: 'lfIn 180ms' }}>
+            <span style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, background: '#CBD5E1', marginBottom: 8 }} />
+            <b style={{ font: '800 18px/1 var(--font-display)', marginBottom: 8 }}>Move to stage</b>
+            {stageOrder.map((s, i) => <div key={s} onClick={() => { setCur(i); setSheet(false); setToast(`Moved to ${s}`); setTimeout(() => setToast(''), 2200); }} className="hov" style={{ height: 50, display: 'flex', alignItems: 'center', gap: 12, padding: '0 14px', borderRadius: 12, background: i === cur ? '#EEF5FD' : 'transparent', font: '600 15px/1 var(--font-display)', color: i === cur ? '#0F4C81' : '#0F172A', cursor: 'pointer' }}><span style={{ flex: 1 }}>{s}</span>{i === cur && <Icon n="check" size={18} />}</div>)}
+          </div>
+        </div>
+      )}
       <div className="grid-2" style={{ display: 'grid', gridTemplateColumns: 'minmax(260px,330px) minmax(0,1fr)', gap: 18, alignItems: 'start' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
           <div className="card">

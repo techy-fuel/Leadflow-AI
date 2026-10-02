@@ -11,6 +11,8 @@ import { Assistant } from './screens/Assistant';
 import { Analytics } from './screens/Analytics';
 import { Integrations, Team, SettingsScreen } from './screens/Admin';
 import { Landing, Login, Onboarding } from './screens/Marketing';
+import { System } from './screens/System';
+import { Notifications } from './screens/Notifications';
 
 const groups: { label: string; items: [Screen, string, string, number?][] }[] = [
   { label: 'MAIN', items: [['dashboard', 'Dashboard', 'layout-dashboard'], ['leads', 'Leads', 'users', 248], ['pipeline', 'Pipeline', 'kanban'], ['inbox', 'Inbox', 'inbox', 6], ['tasks', 'Tasks', 'circle-check-big', 7], ['calendar', 'Calendar', 'calendar-days']] },
@@ -22,9 +24,9 @@ const activeOf: Partial<Record<Screen, Screen>> = { detail: 'leads', builder: 'a
 const commands: [string, string, string, Screen, string][] = [
   ['Search leads…', 'search', '#64748B', 'leads', 'Leads'], ['Create lead', 'user-plus', '#0F4C81', 'leads', '⌘N'], ['Create task', 'circle-plus', '#0F4C81', 'tasks', 'T'],
   ['Open pipeline', 'kanban', '#64748B', 'pipeline', 'G P'], ['Generate AI reply', 'sparkles', '#5B4FD6', 'inbox', 'AI'], ['Create automation', 'workflow', '#5B4FD6', 'builder', 'AI'],
-  ['Open analytics', 'chart-column', '#64748B', 'analytics', 'G A'], ['Settings', 'settings', '#64748B', 'settings', 'G S'], ['View landing page', 'globe', '#64748B', 'landing', ''],
+  ['Open analytics', 'chart-column', '#64748B', 'analytics', 'G A'], ['Settings', 'settings', '#64748B', 'settings', 'G S'], ['View landing page', 'globe', '#64748B', 'landing', ''], ['Design system & mobile', 'swatch-book', '#64748B', 'system', ''],
 ];
-const mobileTabs: [Screen, string, string][] = [['dashboard', 'Home', 'house'], ['leads', 'Leads', 'users'], ['inbox', 'Inbox', 'inbox'], ['tasks', 'Tasks', 'circle-check-big'], ['assistant', 'AI', 'sparkles']];
+const mobileTabs: [Screen | 'more', string, string][] = [['dashboard', 'Home', 'house'], ['leads', 'Leads', 'users'], ['inbox', 'Inbox', 'inbox'], ['tasks', 'Tasks', 'circle-check-big'], ['more', 'More', 'menu']];
 
 const fromHash = (): Screen => { const h = location.hash.slice(1) as Screen; return SCREENS.includes(h) ? h : 'landing'; };
 
@@ -33,7 +35,8 @@ export function App() {
   const [collapsed, setCollapsed] = useState(false);
   const [cmd, setCmd] = useState(false);
   const [q, setQ] = useState('');
-  const go = (s: Screen) => { setScreen(s); setCmd(false); location.hash = s; };
+  const [more, setMore] = useState(false);
+  const go = (s: Screen) => { setScreen(s); setCmd(false); setMore(false); location.hash = s; };
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setCmd(c => !c); setQ(''); }
@@ -45,7 +48,7 @@ export function App() {
   }, []);
   useEffect(() => { document.getElementById('scroll')?.scrollTo(0, 0); }, [screen]);
 
-  const inApp = !['landing', 'login', 'onboarding'].includes(screen);
+  const inApp = !['landing', 'login', 'onboarding', 'system'].includes(screen);
   const act = activeOf[screen] ?? screen;
   const filtered = commands.filter(c => c[0].toLowerCase().includes(q.toLowerCase()));
 
@@ -54,6 +57,8 @@ export function App() {
     case 'landing': body = <Landing />; break;
     case 'login': body = <Login />; break;
     case 'onboarding': body = <Onboarding />; break;
+    case 'system': body = <System />; break;
+    case 'notifications': body = <Notifications />; break;
     case 'dashboard': body = <Dashboard />; break;
     case 'leads': body = <Leads />; break;
     case 'detail': body = <LeadDetail />; break;
@@ -129,7 +134,7 @@ export function App() {
               </div>
               <div style={{ flex: 1 }} />
               <div className="hide-sm" style={{ height: 36, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', border: '1px solid #E5E7EB', borderRadius: 10, font: '600 13px/1 var(--font-display)', color: '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}><Icon n="calendar" size={15} style={{ color: '#64748B' }} />Last 30 days<Icon n="chevron-down" size={14} style={{ color: '#94A3B8' }} /></div>
-              <div style={{ position: 'relative', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', cursor: 'pointer' }}><Icon n="bell" size={18} /><span style={{ position: 'absolute', top: 8, right: 9, width: 7, height: 7, borderRadius: '50%', background: '#EF4444', border: '1.5px solid #fff' }} /></div>
+              <div onClick={() => go('notifications')} title="Notifications" className="navitem" style={{ position: 'relative', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', cursor: 'pointer' }}><Icon n="bell" size={18} /><span style={{ position: 'absolute', top: 8, right: 9, width: 7, height: 7, borderRadius: '50%', background: '#EF4444', border: '1.5px solid #fff' }} /></div>
               <div onClick={() => go('assistant')} style={{ height: 36, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', borderRadius: 10, background: '#F4F3FF', border: '1px solid #DEDBFB', color: '#5B4FD6', font: '600 13px/1 var(--font-display)', cursor: 'pointer', whiteSpace: 'nowrap' }}><Icon n="sparkles" size={15} />Ask AI</div>
               <Avatar name="Sarah Mitchell" size={34} />
             </header>
@@ -139,10 +144,18 @@ export function App() {
           </div>
           {inApp && (
             <nav className="bottom" style={{ height: 64, background: '#fff', borderTop: '1px solid #E5E7EB', gridTemplateColumns: 'repeat(5,1fr)', flexShrink: 0 }}>
-              {mobileTabs.map(([id, l, i]) => <div key={id} onClick={() => go(id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: act === id ? '#0F4C81' : '#94A3B8', font: '600 10.5px/1 var(--font-display)', cursor: 'pointer' }}><Icon n={i} size={21} />{l}</div>)}
+              {mobileTabs.map(([id, l, i]) => <div key={id} onClick={() => id === 'more' ? setMore(m => !m) : go(id)} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 4, color: (id === 'more' ? more : act === id) ? '#0F4C81' : '#94A3B8', font: '600 10.5px/1 var(--font-display)', cursor: 'pointer' }}><Icon n={i} size={21} />{l}</div>)}
             </nav>
           )}
         </main>
+        {more && (
+          <div className="bottom" onClick={() => setMore(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,.36)', zIndex: 40, alignItems: 'flex-end' }}>
+            <div onClick={e => e.stopPropagation()} style={{ width: '100%', background: '#fff', borderRadius: '24px 24px 0 0', padding: '10px 18px 80px', animation: 'lfIn 180ms', maxHeight: '80vh', overflowY: 'auto' }}>
+              <span style={{ display: 'block', margin: '0 auto 12px', width: 40, height: 5, borderRadius: 3, background: '#CBD5E1' }} />
+              {([['calendar', 'Calendar', 'calendar-days'], ['pipeline', 'Pipeline', 'kanban'], ['assistant', 'AI Assistant', 'sparkles'], ['automations', 'Automations', 'workflow'], ['analytics', 'Analytics', 'chart-column'], ['notifications', 'Notifications', 'bell'], ['integrations', 'Integrations', 'blocks'], ['team', 'Team', 'users-round'], ['settings', 'Settings', 'settings']] as [Screen, string, string][]).map(([id, l, i]) => <div key={id} onClick={() => go(id)} style={{ height: 50, display: 'flex', alignItems: 'center', gap: 14, padding: '0 8px', font: '600 15px/1 var(--font-display)', borderRadius: 12 }}><Icon n={i} size={19} style={{ color: '#64748B' }} />{l}</div>)}
+            </div>
+          </div>
+        )}
         {cmd && (
           <div onClick={() => setCmd(false)} style={{ position: 'fixed', inset: 0, background: 'rgba(15,23,42,.32)', display: 'flex', justifyContent: 'center', paddingTop: '14vh', zIndex: 50 }}>
             <div onClick={e => e.stopPropagation()} style={{ width: 600, maxWidth: '92vw', height: 'max-content', background: '#fff', borderRadius: 18, boxShadow: '0 24px 64px rgba(15,23,42,.24)', overflow: 'hidden', animation: 'lfIn 180ms cubic-bezier(.16,1,.3,1)' }}>
