@@ -15,14 +15,16 @@ export type State = {
 export const STAGES = ['New', 'Contacted', 'Qualified', 'Meeting', 'Proposal', 'Negotiation', 'Won', 'Lost'];
 export const SOURCES = ['Website', 'Facebook', 'Instagram', 'Google Ads', 'WhatsApp', 'Referral', 'Other'];
 
-const KEY = 'leadflow.v1';
+const BASE = 'leadflow.v1';
+let userKey: string | null = (() => { try { return JSON.parse(localStorage.getItem('leadflow.session') ?? 'null'); } catch { return null; } })();
+const storageKey = () => `${BASE}:${userKey ?? 'guest'}`;
 const initial = (): State => ({
   user: { name: '', email: '', workspace: 'My workspace' },
   leads: [], tasks: [], automations: [], connected: {}, aiToggles: [true, true, true, false], notificationsReadAt: 0,
   team: [{ id: 'owner', name: 'You', email: '', role: 'Owner', status: 'Active' }],
 });
 const load = (): State => {
-  try { const raw = localStorage.getItem(KEY); if (raw) return { ...initial(), ...JSON.parse(raw) }; } catch { /* storage unavailable */ }
+  try { const raw = localStorage.getItem(storageKey()); if (raw) return { ...initial(), ...JSON.parse(raw) }; } catch { /* storage unavailable */ }
   return initial();
 };
 
@@ -30,11 +32,12 @@ let state = load();
 const subs = new Set<() => void>();
 const set = (fn: (s: State) => State) => {
   state = fn(state);
-  try { localStorage.setItem(KEY, JSON.stringify(state)); } catch { /* ignore */ }
+  try { if (userKey) localStorage.setItem(storageKey(), JSON.stringify(state)); } catch { /* ignore */ }
   subs.forEach(f => f());
 };
 export const useStore = <T,>(sel: (s: State) => T): T => useSyncExternalStore(f => { subs.add(f); return () => subs.delete(f); }, () => sel(state));
 export const getState = () => state;
+export function switchUser(id: string | null) { userKey = id; state = load(); subs.forEach(f => f()); }
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 export const actions = {

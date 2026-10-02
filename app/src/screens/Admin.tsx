@@ -3,6 +3,7 @@ import { useGo, type Screen } from '../nav';
 import { Avatar, Badge, Button, Icon, Input, Select, Toggle } from '../ui';
 import { integrations, plans, roles } from '../data';
 import { actions, useStore } from '../store';
+import { changePassword, deleteAccount, logOut } from '../auth';
 import { Empty, InviteModal } from '../modals';
 
 export function Integrations() {
@@ -80,6 +81,7 @@ export function SettingsScreen({ billing }: { billing: boolean }) {
   const ai = useStore(st => st.aiToggles); const user = useStore(st => st.user); const leads = useStore(st => st.leads); const teamN = useStore(st => st.team.length);
   const [ws, setWs] = useState(user.workspace); const [nm, setNm] = useState(user.name); const [em, setEm] = useState(user.email);
   const [saved, setSaved] = useState(false);
+  const [pw, setPw] = useState({ cur: '', next: '' }); const [pwMsg, setPwMsg] = useState<{ ok: boolean; t: string } | null>(null);
   const cur = billing ? 'billing' : 'settings';
   const toggles: [string, string][] = [['Auto-reply to new leads', "AI sends a first response within 60 seconds on the lead's channel."], ['Lead scoring', 'Score every lead 0–100 from intent, fit and engagement.'], ['Suggest next actions', 'Show recommended actions on lead profiles and the dashboard.'], ['Draft replies only', 'Never send AI messages without a team member approving them.']];
   const usage: [string, string, number, string][] = [['Seats', `${teamN} of 3`, Math.min(100, teamN / 3 * 100), '#1E88E5'], ['Leads', `${leads.length} of 500`, Math.min(100, leads.length / 5), '#1E88E5']];
@@ -112,6 +114,21 @@ export function SettingsScreen({ billing }: { billing: boolean }) {
             <Button variant="ghost" size="sm" onClick={() => { setWs(user.workspace); setNm(user.name); setEm(user.email); }}>Cancel</Button>
             <Button size="sm" onClick={() => { actions.setUser({ workspace: ws.trim() || 'My workspace', name: nm.trim(), email: em.trim() }); setSaved(true); setTimeout(() => setSaved(false), 2000); }}>Save changes</Button>
           </div>
+          <div className="card">
+            <div style={{ padding: '18px 22px', borderBottom: '1px solid #F1F5F9', display: 'flex', alignItems: 'center', gap: 8 }}><Icon n="shield-check" size={15} style={{ color: '#0F4C81' }} /><span style={{ font: '700 16px/1.2 var(--font-display)' }}>Security</span></div>
+            <div style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 14 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))', gap: 14 }}>
+                <Input label="Current password" type="password" autoComplete="current-password" value={pw.cur} onChange={e => setPw({ ...pw, cur: e.target.value })} />
+                <Input label="New password" type="password" autoComplete="new-password" value={pw.next} onChange={e => setPw({ ...pw, next: e.target.value })} />
+              </div>
+              {pwMsg && <span role="status" style={{ font: '600 13px/1.4 var(--font-display)', color: pwMsg.ok ? '#15803D' : '#DC2626' }}>{pwMsg.t}</span>}
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                <Button size="sm" onClick={async () => { const r = await changePassword(pw.cur, pw.next); setPwMsg(r.ok ? { ok: true, t: 'Password updated.' } : { ok: false, t: r.error }); if (r.ok) setPw({ cur: '', next: '' }); }}>Change password</Button>
+                <Button size="sm" variant="secondary" onClick={() => { logOut(); go('landing'); }}><Icon n="log-out" size={14} />Log out</Button>
+              </div>
+            </div>
+          </div>
+          <div className="card" style={{ padding: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}><div><div style={{ font: '700 15px/1.2 var(--font-display)' }}>Delete account</div><div style={{ marginTop: 4, font: '500 13px/1.4 var(--font-body)', color: '#64748B' }}>Permanently deletes your login and all workspace data in this browser.</div></div><Button variant="danger" size="sm" onClick={() => { if (confirm('Delete your account and all data? This cannot be undone.')) { deleteAccount(); go('landing'); } }}>Delete account</Button></div>
           <div className="card" style={{ padding: 22, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}><div><div style={{ font: '700 15px/1.2 var(--font-display)' }}>Clear workspace data</div><div style={{ marginTop: 4, font: '500 13px/1.4 var(--font-body)', color: '#64748B' }}>Permanently removes all leads, tasks, automations and settings stored in this browser.</div></div><Button variant="danger" size="sm" onClick={() => { if (confirm('Delete all workspace data?')) actions.reset(); }}>Clear data</Button></div>
         </> : <>
           <div className="card" style={{ padding: 22, display: 'flex', gap: 18, alignItems: 'center', flexWrap: 'wrap' }}>

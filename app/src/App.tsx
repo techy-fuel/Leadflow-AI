@@ -12,7 +12,9 @@ import { Automations, Builder } from './screens/Automations';
 import { Assistant } from './screens/Assistant';
 import { Analytics } from './screens/Analytics';
 import { Integrations, Team, SettingsScreen } from './screens/Admin';
-import { Landing, Login, Onboarding } from './screens/Marketing';
+import { Landing, Onboarding } from './screens/Marketing';
+import { Login } from './screens/Auth';
+import { useSession, logOut } from './auth';
 import { System } from './screens/System';
 import { Notifications } from './screens/Notifications';
 
@@ -36,6 +38,7 @@ export function App() {
   const [[screen, param], setRoute] = useState<[Screen, string]>(fromHash);
   const [leadModal, setLeadModal] = useState(false);
   const [taskModal, setTaskModal] = useState(false);
+  const session = useSession();
   const user = useStore(st => st.user);
   const leadCount = useStore(st => st.leads.length);
   const dueCount = useStore(st => st.tasks.filter(t => !t.done && t.dueAt != null && (isOverdue(t) || new Date(t.dueAt).toDateString() === new Date().toDateString())).length);
@@ -58,15 +61,19 @@ export function App() {
   useEffect(() => { document.getElementById('scroll')?.scrollTo(0, 0); }, [screen]);
 
   const run = (to: Screen | 'lead' | 'task') => to === 'lead' ? (setCmd(false), setLeadModal(true)) : to === 'task' ? (setCmd(false), setTaskModal(true)) : go(to);
-  const inApp = !['landing', 'login', 'onboarding', 'system'].includes(screen);
+  const PUBLIC: Screen[] = ['landing', 'login', 'system'];
+  const blocked = !session && !PUBLIC.includes(screen);
+  const shown: Screen = blocked ? 'login' : session && screen === 'login' ? 'dashboard' : screen;
+  useEffect(() => { if (shown !== screen) go(shown); }, [shown, screen]);
+  const inApp = !['landing', 'login', 'onboarding', 'system'].includes(shown);
   const groups = makeGroups(leadCount, unread, dueCount);
-  const act = activeOf[screen] ?? screen;
+  const act = activeOf[shown] ?? shown;
   const filtered = commands.filter(c => c[0].toLowerCase().includes(q.toLowerCase()));
   const allLeads = useStore(st => st.leads);
   const leadHits = q.trim() ? allLeads.filter(l => (l.name + l.company + l.email).toLowerCase().includes(q.toLowerCase())).slice(0, 5) : [];
 
   let body: ReactNode;
-  switch (screen) {
+  switch (shown) {
     case 'landing': body = <Landing />; break;
     case 'login': body = <Login />; break;
     case 'onboarding': body = <Onboarding />; break;
@@ -82,10 +89,10 @@ export function App() {
     case 'automations': body = <Automations />; break;
     case 'builder': body = <Builder />; break;
     case 'assistant': body = <Assistant />; break;
-    case 'insights': case 'analytics': case 'reports': body = <Analytics kind={screen} />; break;
+    case 'insights': case 'analytics': case 'reports': body = <Analytics kind={shown as 'analytics'} />; break;
     case 'integrations': body = <Integrations />; break;
     case 'team': body = <Team />; break;
-    case 'settings': case 'billing': body = <SettingsScreen billing={screen === 'billing'} />; break;
+    case 'settings': case 'billing': body = <SettingsScreen billing={shown === 'billing'} />; break;
   }
 
   return (
@@ -132,6 +139,7 @@ export function App() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', borderRadius: 10 }}>
                 <Avatar name={userName} size={30} status="online" />
                 {!collapsed && <div style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap' }}><div style={{ font: '600 13px/1.2 var(--font-display)' }}>{userName}</div><div style={{ font: '500 11px/1.3 var(--font-body)', color: '#64748B' }}>Owner</div></div>}
+                <button onClick={() => { logOut(); go('landing'); }} title="Log out" className="navitem" style={{ width: 26, height: 26, borderRadius: 7, border: 0, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B', cursor: 'pointer' }}><Icon n="log-out" size={15} /></button>
                 <button onClick={() => setCollapsed(c => !c)} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} className="navitem" style={{ width: 26, height: 26, borderRadius: 7, border: 0, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B', cursor: 'pointer' }}><Icon n="panel-left" size={15} /></button>
               </div>
             </div>
@@ -153,7 +161,7 @@ export function App() {
             </header>
           )}
           <div id="scroll" style={{ flex: 1, overflowY: 'auto', paddingBottom: inApp ? undefined : 0 }}>
-            <div key={screen} style={{ animation: 'lfIn 200ms cubic-bezier(.16,1,.3,1)', height: ['pipeline', 'inbox', 'builder', 'assistant'].includes(screen) ? '100%' : undefined, minHeight: '100%' }}>{body}</div>
+            <div key={shown} style={{ animation: 'lfIn 200ms cubic-bezier(.16,1,.3,1)', height: ['pipeline', 'inbox', 'builder', 'assistant'].includes(shown) ? '100%' : undefined, minHeight: '100%' }}>{body}</div>
           </div>
           {inApp && (
             <nav className="bottom" style={{ height: 64, background: '#fff', borderTop: '1px solid #E5E7EB', gridTemplateColumns: 'repeat(5,1fr)', flexShrink: 0 }}>
@@ -166,6 +174,7 @@ export function App() {
             <div onClick={e => e.stopPropagation()} style={{ width: '100%', background: '#fff', borderRadius: '24px 24px 0 0', padding: '10px 18px 80px', animation: 'lfIn 180ms', maxHeight: '80vh', overflowY: 'auto' }}>
               <span style={{ display: 'block', margin: '0 auto 12px', width: 40, height: 5, borderRadius: 3, background: '#CBD5E1' }} />
               {([['calendar', 'Calendar', 'calendar-days'], ['pipeline', 'Pipeline', 'kanban'], ['assistant', 'AI Assistant', 'sparkles'], ['automations', 'Automations', 'workflow'], ['analytics', 'Analytics', 'chart-column'], ['notifications', 'Notifications', 'bell'], ['integrations', 'Integrations', 'blocks'], ['team', 'Team', 'users-round'], ['settings', 'Settings', 'settings']] as [Screen, string, string][]).map(([id, l, i]) => <div key={id} onClick={() => go(id)} style={{ height: 50, display: 'flex', alignItems: 'center', gap: 14, padding: '0 8px', font: '600 15px/1 var(--font-display)', borderRadius: 12 }}><Icon n={i} size={19} style={{ color: '#64748B' }} />{l}</div>)}
+              <div onClick={() => { logOut(); go('landing'); }} style={{ height: 50, display: 'flex', alignItems: 'center', gap: 14, padding: '0 8px', font: '600 15px/1 var(--font-display)', color: '#DC2626' }}><Icon n="log-out" size={19} />Log out</div>
             </div>
           </div>
         )}
