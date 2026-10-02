@@ -1,6 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Nav, SCREENS, type Screen } from './nav';
 import { Avatar, Icon } from './ui';
+import { LeadModal, TaskModal } from './modals';
+import { useStore, isOverdue } from './store';
 import { Dashboard } from './screens/Dashboard';
 import { Leads, LeadDetail } from './screens/Leads';
 import { Pipeline } from './screens/Pipeline';
@@ -14,43 +16,54 @@ import { Landing, Login, Onboarding } from './screens/Marketing';
 import { System } from './screens/System';
 import { Notifications } from './screens/Notifications';
 
-const groups: { label: string; items: [Screen, string, string, number?][] }[] = [
-  { label: 'MAIN', items: [['dashboard', 'Dashboard', 'layout-dashboard'], ['leads', 'Leads', 'users', 248], ['pipeline', 'Pipeline', 'kanban'], ['inbox', 'Inbox', 'inbox', 6], ['tasks', 'Tasks', 'circle-check-big', 7], ['calendar', 'Calendar', 'calendar-days']] },
+const makeGroups = (leadCount: number, unread: number, dueCount: number): { label: string; items: [Screen, string, string, number?][] }[] => [
+  { label: 'MAIN', items: [['dashboard', 'Dashboard', 'layout-dashboard'], ['leads', 'Leads', 'users', leadCount], ['pipeline', 'Pipeline', 'kanban'], ['inbox', 'Inbox', 'inbox', unread], ['tasks', 'Tasks', 'circle-check-big', dueCount], ['calendar', 'Calendar', 'calendar-days']] },
   { label: 'AI', items: [['assistant', 'AI Assistant', 'sparkles'], ['automations', 'Automations', 'workflow'], ['insights', 'AI Insights', 'lightbulb']] },
   { label: 'ANALYTICS', items: [['analytics', 'Analytics', 'chart-column'], ['reports', 'Reports', 'file-chart-column']] },
   { label: 'SETTINGS', items: [['integrations', 'Integrations', 'blocks'], ['team', 'Team', 'users-round'], ['settings', 'Settings', 'settings']] },
 ];
 const activeOf: Partial<Record<Screen, Screen>> = { detail: 'leads', builder: 'automations', billing: 'settings' };
-const commands: [string, string, string, Screen, string][] = [
-  ['Search leads…', 'search', '#64748B', 'leads', 'Leads'], ['Create lead', 'user-plus', '#0F4C81', 'leads', '⌘N'], ['Create task', 'circle-plus', '#0F4C81', 'tasks', 'T'],
+const commands: [string, string, string, Screen | 'lead' | 'task', string][] = [
+  ['Search leads…', 'search', '#64748B', 'leads', 'Leads'], ['Create lead', 'user-plus', '#0F4C81', 'lead', ''], ['Create task', 'circle-plus', '#0F4C81', 'task', ''],
   ['Open pipeline', 'kanban', '#64748B', 'pipeline', 'G P'], ['Generate AI reply', 'sparkles', '#5B4FD6', 'inbox', 'AI'], ['Create automation', 'workflow', '#5B4FD6', 'builder', 'AI'],
   ['Open analytics', 'chart-column', '#64748B', 'analytics', 'G A'], ['Settings', 'settings', '#64748B', 'settings', 'G S'], ['View landing page', 'globe', '#64748B', 'landing', ''], ['Design system & mobile', 'swatch-book', '#64748B', 'system', ''],
 ];
 const mobileTabs: [Screen | 'more', string, string][] = [['dashboard', 'Home', 'house'], ['leads', 'Leads', 'users'], ['inbox', 'Inbox', 'inbox'], ['tasks', 'Tasks', 'circle-check-big'], ['more', 'More', 'menu']];
 
-const fromHash = (): Screen => { const h = location.hash.slice(1) as Screen; return SCREENS.includes(h) ? h : 'landing'; };
+const fromHash = (): [Screen, string] => { const [h, p] = location.hash.slice(1).split('/'); return SCREENS.includes(h as Screen) ? [h as Screen, p ?? ''] : ['landing', '']; };
 
 export function App() {
-  const [screen, setScreen] = useState<Screen>(fromHash);
+  const [[screen, param], setRoute] = useState<[Screen, string]>(fromHash);
+  const [leadModal, setLeadModal] = useState(false);
+  const [taskModal, setTaskModal] = useState(false);
+  const user = useStore(st => st.user);
+  const leadCount = useStore(st => st.leads.length);
+  const dueCount = useStore(st => st.tasks.filter(t => !t.done && t.dueAt != null && (isOverdue(t) || new Date(t.dueAt).toDateString() === new Date().toDateString())).length);
+  const unread = useStore(st => st.leads.filter(l => l.messages.length && l.messages[l.messages.length - 1].dir === 'in').length);
+  const userName = user.name || 'You';
   const [collapsed, setCollapsed] = useState(false);
   const [cmd, setCmd] = useState(false);
   const [q, setQ] = useState('');
   const [more, setMore] = useState(false);
-  const go = (s: Screen) => { setScreen(s); setCmd(false); setMore(false); location.hash = s; };
+  const go = (s: Screen, p = '') => { setRoute([s, p]); setCmd(false); setMore(false); location.hash = p ? `${s}/${p}` : s; };
   useEffect(() => {
     const k = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); setCmd(c => !c); setQ(''); }
       if (e.key === 'Escape') setCmd(false);
     };
-    const h = () => setScreen(fromHash());
+    const h = () => setRoute(fromHash());
     window.addEventListener('keydown', k); window.addEventListener('hashchange', h);
     return () => { window.removeEventListener('keydown', k); window.removeEventListener('hashchange', h); };
   }, []);
   useEffect(() => { document.getElementById('scroll')?.scrollTo(0, 0); }, [screen]);
 
+  const run = (to: Screen | 'lead' | 'task') => to === 'lead' ? (setCmd(false), setLeadModal(true)) : to === 'task' ? (setCmd(false), setTaskModal(true)) : go(to);
   const inApp = !['landing', 'login', 'onboarding', 'system'].includes(screen);
+  const groups = makeGroups(leadCount, unread, dueCount);
   const act = activeOf[screen] ?? screen;
   const filtered = commands.filter(c => c[0].toLowerCase().includes(q.toLowerCase()));
+  const allLeads = useStore(st => st.leads);
+  const leadHits = q.trim() ? allLeads.filter(l => (l.name + l.company + l.email).toLowerCase().includes(q.toLowerCase())).slice(0, 5) : [];
 
   let body: ReactNode;
   switch (screen) {
@@ -76,7 +89,7 @@ export function App() {
   }
 
   return (
-    <Nav.Provider value={go}>
+    <Nav.Provider value={{ go, param, openLead: () => { setCmd(false); setLeadModal(true); }, openTask: () => { setCmd(false); setTaskModal(true); } }}>
       <style>{`.side{display:flex}.bottom{display:none}.topbar-search{display:flex}@media(max-width:900px){.side{display:none}.bottom{display:grid}.topbar-search span.ph{display:none}}`}</style>
       <div style={{ display: 'flex', height: '100vh', overflow: 'hidden', background: '#F8FAFC' }}>
         {inApp && (
@@ -90,8 +103,8 @@ export function App() {
             </div>
             {!collapsed && (
               <div style={{ margin: '14px 14px 4px', padding: '8px 10px', border: '1px solid #E5E7EB', borderRadius: 12, display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
-                <div style={{ width: 26, height: 26, borderRadius: 7, background: '#F1F5F9', color: '#0F4C81', font: '700 11px/26px var(--font-display)', textAlign: 'center' }}>AD</div>
-                <div style={{ flex: 1, minWidth: 0 }}><div style={{ font: '500 10px/1.2 var(--font-body)', color: '#64748B' }}>Workspace</div><div style={{ font: '600 13px/1.3 var(--font-display)' }}>Acme Digital</div></div>
+                <div style={{ width: 26, height: 26, borderRadius: 7, background: '#F1F5F9', color: '#0F4C81', font: '700 11px/26px var(--font-display)', textAlign: 'center' }}>{(user.workspace || 'W').slice(0, 2).toUpperCase()}</div>
+                <div style={{ flex: 1, minWidth: 0 }}><div style={{ font: '500 10px/1.2 var(--font-body)', color: '#64748B' }}>Workspace</div><div style={{ font: '600 13px/1.3 var(--font-display)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{user.workspace}</div></div>
                 <Icon n="chevrons-up-down" size={14} style={{ color: '#94A3B8' }} />
               </div>
             )}
@@ -117,8 +130,8 @@ export function App() {
             <div style={{ borderTop: '1px solid #F1F5F9', padding: 10, display: 'flex', flexDirection: 'column', gap: 2 }}>
               <div className="navitem" style={{ display: 'flex', alignItems: 'center', gap: 10, height: 34, padding: '0 10px', borderRadius: 9, color: '#475569', font: '500 13.5px/1 var(--font-display)', cursor: 'pointer', whiteSpace: 'nowrap' }}><Icon n="life-buoy" size={17} />{!collapsed && <span>Help &amp; Support</span>}</div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 8px', borderRadius: 10 }}>
-                <Avatar name="Sarah Mitchell" size={30} status="online" />
-                {!collapsed && <div style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap' }}><div style={{ font: '600 13px/1.2 var(--font-display)' }}>Sarah Mitchell</div><div style={{ font: '500 11px/1.3 var(--font-body)', color: '#64748B' }}>Owner</div></div>}
+                <Avatar name={userName} size={30} status="online" />
+                {!collapsed && <div style={{ flex: 1, minWidth: 0, whiteSpace: 'nowrap' }}><div style={{ font: '600 13px/1.2 var(--font-display)' }}>{userName}</div><div style={{ font: '500 11px/1.3 var(--font-body)', color: '#64748B' }}>Owner</div></div>}
                 <button onClick={() => setCollapsed(c => !c)} title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'} className="navitem" style={{ width: 26, height: 26, borderRadius: 7, border: 0, background: 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B', cursor: 'pointer' }}><Icon n="panel-left" size={15} /></button>
               </div>
             </div>
@@ -136,7 +149,7 @@ export function App() {
               <div className="hide-sm" style={{ height: 36, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', border: '1px solid #E5E7EB', borderRadius: 10, font: '600 13px/1 var(--font-display)', color: '#334155', cursor: 'pointer', whiteSpace: 'nowrap' }}><Icon n="calendar" size={15} style={{ color: '#64748B' }} />Last 30 days<Icon n="chevron-down" size={14} style={{ color: '#94A3B8' }} /></div>
               <div onClick={() => go('notifications')} title="Notifications" className="navitem" style={{ position: 'relative', width: 36, height: 36, borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#475569', cursor: 'pointer' }}><Icon n="bell" size={18} /><span style={{ position: 'absolute', top: 8, right: 9, width: 7, height: 7, borderRadius: '50%', background: '#EF4444', border: '1.5px solid #fff' }} /></div>
               <div onClick={() => go('assistant')} style={{ height: 36, display: 'flex', alignItems: 'center', gap: 8, padding: '0 12px', borderRadius: 10, background: '#F4F3FF', border: '1px solid #DEDBFB', color: '#5B4FD6', font: '600 13px/1 var(--font-display)', cursor: 'pointer', whiteSpace: 'nowrap' }}><Icon n="sparkles" size={15} />Ask AI</div>
-              <Avatar name="Sarah Mitchell" size={34} />
+              <Avatar name={userName} size={34} />
             </header>
           )}
           <div id="scroll" style={{ flex: 1, overflowY: 'auto', paddingBottom: inApp ? undefined : 0 }}>
@@ -161,23 +174,26 @@ export function App() {
             <div onClick={e => e.stopPropagation()} style={{ width: 600, maxWidth: '92vw', height: 'max-content', background: '#fff', borderRadius: 18, boxShadow: '0 24px 64px rgba(15,23,42,.24)', overflow: 'hidden', animation: 'lfIn 180ms cubic-bezier(.16,1,.3,1)' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '16px 18px', borderBottom: '1px solid #F1F5F9' }}>
                 <Icon n="search" size={18} style={{ color: '#94A3B8' }} />
-                <input autoFocus value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && filtered[0]) go(filtered[0][3]); }} placeholder="Search leads or type a command…" style={{ flex: 1, border: 0, outline: 0, font: '500 15px/1 var(--font-body)', background: 'transparent' }} />
+                <input autoFocus value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => { if (e.key === 'Enter') { if (leadHits[0]) go('detail', leadHits[0].id); else if (filtered[0]) run(filtered[0][3]); } }} placeholder="Search leads or type a command…" style={{ flex: 1, border: 0, outline: 0, font: '500 15px/1 var(--font-body)', background: 'transparent' }} />
                 <span style={{ font: '600 11px/1 var(--font-mono)', color: '#64748B', border: '1px solid #E5E7EB', padding: '3px 6px', borderRadius: 6 }}>ESC</span>
               </div>
               <div style={{ padding: 8 }}>
+                {leadHits.length > 0 && <><div style={{ font: '700 10px/1 var(--font-display)', letterSpacing: '.08em', color: '#94A3B8', padding: '10px 10px 6px' }}>LEADS</div>{leadHits.map(l => <div key={l.id} onClick={() => go('detail', l.id)} className="navitem" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, cursor: 'pointer' }}><Avatar name={l.name} size={24} /><span style={{ flex: 1, font: '500 14px/1 var(--font-body)' }}>{l.name}</span><span style={{ font: '500 12px/1 var(--font-body)', color: '#94A3B8' }}>{l.company}</span></div>)}</>}
                 <div style={{ font: '700 10px/1 var(--font-display)', letterSpacing: '.08em', color: '#94A3B8', padding: '10px 10px 6px' }}>COMMANDS</div>
                 {filtered.map(([label, icon, color, to, hint], i) => (
-                  <div key={label} onClick={() => go(to)} className="navitem" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, cursor: 'pointer', background: i === 0 ? '#F8FAFC' : 'transparent' }}>
+                  <div key={label} onClick={() => run(to)} className="navitem" style={{ display: 'flex', alignItems: 'center', gap: 12, padding: 10, borderRadius: 10, cursor: 'pointer', background: i === 0 ? '#F8FAFC' : 'transparent' }}>
                     <Icon n={icon} size={16} style={{ color }} /><span style={{ flex: 1, font: '500 14px/1 var(--font-body)' }}>{label}</span><span style={{ font: '500 12px/1 var(--font-body)', color: '#94A3B8' }}>{hint}</span>
                   </div>
                 ))}
-                {!filtered.length && <div style={{ padding: 20, textAlign: 'center', font: '500 13px/1 var(--font-body)', color: '#94A3B8' }}>No results</div>}
+                {!filtered.length && !leadHits.length && <div style={{ padding: 20, textAlign: 'center', font: '500 13px/1 var(--font-body)', color: '#94A3B8' }}>No results</div>}
               </div>
               <div style={{ display: 'flex', gap: 16, padding: '10px 18px', borderTop: '1px solid #F1F5F9', font: '500 11px/1 var(--font-body)', color: '#94A3B8' }}><span>↑↓ Navigate</span><span>↵ Open</span><span>⌘K Toggle</span></div>
             </div>
           </div>
         )}
       </div>
+      {leadModal && <LeadModal onClose={() => setLeadModal(false)} onCreated={id => go('detail', id)} />}
+      {taskModal && <TaskModal onClose={() => setTaskModal(false)} />}
       <style>{`.navitem:hover{background:#F1F5F9}`}</style>
     </Nav.Provider>
   );

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useGo } from '../nav';
 import { Button, Icon, Input } from '../ui';
-import { funnel, funnelColors } from '../data';
+import { actions } from '../store';
+import { funnelColors } from '../data';
+const funnel: [string, number][] = [['New', 1000], ['Contacted', 620], ['Qualified', 310], ['Meeting', 140], ['Proposal', 65], ['Won', 24]]; // landing-page illustration only
 
 const Logo = ({ onClick }: { onClick?: () => void }) => (
   <div onClick={onClick} style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: onClick ? 'pointer' : 'default' }}>
@@ -64,7 +66,7 @@ export function Landing() {
 }
 
 export function Login() {
-  const go = useGo();
+  const go = useGo(); const [f, setF] = useState({ name: '', email: '' });
   const feed: [string, string, string, string, string, string][] = [['user-plus', '#0F4C81', '#EEF5FD', 'New lead from Facebook', 'John Smith · ABC Construction', 'now'], ['sparkles', '#5B4FD6', '#F4F3FF', 'Scored 87 — High Intent', 'Specific service requested', '2s'], ['message-circle', '#15803D', '#F0FDF4', 'AI replied on WhatsApp', 'Response time 41 seconds', '41s']];
   return (
     <div className="login" style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) minmax(0,1fr)', minHeight: '100%' }}>
@@ -72,12 +74,12 @@ export function Login() {
       <div style={{ display: 'flex', flexDirection: 'column', padding: '32px clamp(20px,4vw,48px)', background: '#fff' }}>
         <Logo onClick={() => go('landing')} />
         <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <form onSubmit={e => { e.preventDefault(); go('onboarding'); }} style={{ width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <form onSubmit={e => { e.preventDefault(); actions.setUser({ name: f.name.trim(), email: f.email.trim() }); go('onboarding'); }} style={{ width: '100%', maxWidth: 380, display: 'flex', flexDirection: 'column', gap: 18 }}>
             <div><h1 style={{ margin: 0, font: '800 28px/1.15 var(--font-display)', letterSpacing: '-.025em' }}>Create your account</h1><p style={{ margin: '8px 0 0', font: '500 14px/1.5 var(--font-body)', color: '#64748B' }}>Start your 14-day free trial. No credit card required.</p></div>
             <div onClick={() => go('onboarding')} style={{ height: 44, border: '1px solid #CBD5E1', borderRadius: 14, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, font: '600 14px/1 var(--font-display)', cursor: 'pointer' }}><span style={{ font: '800 15px/1 var(--font-display)', color: '#EA4335' }}>G</span>Continue with Google</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, font: '500 12px/1 var(--font-body)', color: '#94A3B8' }}><span style={{ flex: 1, height: 1, background: '#E5E7EB' }} />or<span style={{ flex: 1, height: 1, background: '#E5E7EB' }} /></div>
-            <Input label="Full name" placeholder="Sarah Mitchell" />
-            <Input label="Work email" type="email" placeholder="sarah@acmedigital.com" />
+            <Input label="Full name" placeholder="Your name" value={f.name} onChange={e => setF({ ...f, name: e.target.value })} />
+            <Input label="Work email" type="email" placeholder="you@company.com" value={f.email} onChange={e => setF({ ...f, email: e.target.value })} />
             <Input label="Password" type="password" placeholder="At least 8 characters" />
             <Button size="lg" full type="submit">Create account</Button>
             <p style={{ margin: 0, textAlign: 'center', font: '500 13px/1.5 var(--font-body)', color: '#64748B' }}>Already have an account? <a href="#dashboard" style={{ fontWeight: 600 }}>Log in</a></p>
@@ -98,7 +100,7 @@ export function Login() {
 const srcs: [string, string, string, string][] = [['Website', 'globe', '#0F4C81', '#EEF5FD'], ['Facebook Lead Ads', 'facebook', '#1877F2', '#EEF4FE'], ['Google Ads', 'search', '#EA4335', '#FEF1F0'], ['WhatsApp', 'message-circle', '#16A34A', '#F0FDF4'], ['Instagram', 'instagram', '#C026D3', '#FBF0FD'], ['Import CSV', 'file-spreadsheet', '#475569', '#F1F5F9']];
 export function Onboarding() {
   const go = useGo();
-  const [sel, setSel] = useState<Set<string>>(new Set(['Website', 'Facebook Lead Ads']));
+  const [sel, setSel] = useState<Set<string>>(new Set()); const [ws, setWs] = useState('');
   const toggle = (n: string) => setSel(s => { const x = new Set(s); x.has(n) ? x.delete(n) : x.add(n); return x; });
   const steps = [['Workspace', 2], ['Lead sources', 1], ['Invite team', 0]] as [string, number][];
   return (
@@ -113,6 +115,7 @@ export function Onboarding() {
       <div style={{ flex: 1, display: 'flex', justifyContent: 'center', padding: '56px 24px' }}>
         <div style={{ width: '100%', maxWidth: 720, display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div><span style={{ font: '600 13px/1 var(--font-display)', color: '#1E88E5' }}>Step 2 of 3</span><h1 style={{ margin: '10px 0 0', font: '800 30px/1.15 var(--font-display)', letterSpacing: '-.025em' }}>Where do your leads come from?</h1><p style={{ margin: '8px 0 0', font: '500 15px/1.5 var(--font-body)', color: '#64748B' }}>Connect at least one source. You can add more anytime from Integrations.</p></div>
+          <Input label="Workspace name" placeholder="e.g. Acme Digital" value={ws} onChange={e => setWs(e.target.value)} />
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit,minmax(200px,1fr))', gap: 12 }}>
             {srcs.map(([n, icon, c, bg]) => { const on = sel.has(n); return (
               <div key={n} onClick={() => toggle(n)} style={{ background: '#fff', border: on ? '2px solid #1E88E5' : '1px solid #E5E7EB', borderRadius: 16, padding: on ? 15 : 16, display: 'flex', alignItems: 'center', gap: 12, cursor: 'pointer', boxShadow: on ? '0 0 0 4px rgba(30,136,229,.1)' : 'none', transition: 'box-shadow 160ms' }}>
@@ -124,7 +127,7 @@ export function Onboarding() {
           <div style={{ display: 'flex', gap: 12, padding: '14px 16px', borderRadius: 14, background: '#F4F3FF', border: '1px solid #ECEBFD', font: '500 13.5px/1.5 var(--font-body)', color: '#334155' }}><Icon n="sparkles" size={16} style={{ color: '#5B4FD6', marginTop: 2 }} /><span>Once connected, I'll import the last 30 days of leads, score them, and flag who needs a follow-up first.</span></div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Button variant="ghost" onClick={() => go('login')}>Back</Button>
-            <Button onClick={() => go('dashboard')}>Connect {sel.size} source{sel.size === 1 ? '' : 's'}<Icon n="arrow-right" size={15} /></Button>
+            <Button onClick={() => { if (ws.trim()) actions.setUser({ workspace: ws.trim() }); sel.forEach(n => actions.setConnected(n === 'Facebook Lead Ads' ? 'Facebook Lead Ads' : n, true)); go('dashboard'); }}>{sel.size ? `Connect ${sel.size} source${sel.size === 1 ? '' : 's'}` : 'Continue'}<Icon n="arrow-right" size={15} /></Button>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react';
 import { Avatar, Badge, Button, Eyebrow, Icon, Input, ProgressRing, Select, PillTabs, StatCard, Toggle, Skel } from '../ui';
-import { KIND, leads, temp } from '../data';
+import { KIND, temp } from '../data';
 
 const Panel = ({ title, children, w, style }: { title: string; children: ReactNode; w?: number; style?: React.CSSProperties }) => (
   <div style={{ background: '#fff', borderRadius: 20, padding: 24, display: 'flex', flexDirection: 'column', gap: 14, width: w, minWidth: 0, ...style }}>
@@ -32,7 +32,8 @@ function Phone({ label, bg = '#F8FAFC', children, nav, overlay }: { label: strin
   );
 }
 
-export const notifs: [string, string, string, string, string, string, string, boolean][] = [
+const sampleLeads = ([['John Smith', 'ABC Construction', 87, 'Qualified', '2h'], ['Ahmed Khan', 'Brightsmile Dental', 78, 'Proposal', '35m'], ['Emily Carter', 'Carter & Co. Law', 91, 'Meeting', '1h'], ['Sarah Lee', 'Northwind Realty', 64, 'Contacted', '5h'], ['Priya Nair', 'Lumen Yoga Studio', 52, 'Contacted', '1d'], ['Marco Rossi', 'Rossi Auto Body', 41, 'New', '12m'], ['Grace Okafor', 'Okafor Logistics', 73, 'Qualified', '3h']] as [string, string, number, string, string][]).map(([name, company, score, stage, last]) => ({ name, company, score, stage, last }));
+const notifs: [string, string, string, string, string, string, string, boolean][] = [
   ['flame', '#DC2626', '#FEF2F2', 'New high-intent lead', 'Emily Carter · Google Ads · score 91', '2m', 'Call now', true],
   ['message-circle', '#15803D', '#F0FDF4', 'Ahmed replied on WhatsApp', '“Can you send the pricing breakdown today?”', '8m', 'Reply', true],
   ['clock', '#B45309', '#FEF7EA', 'Follow-up overdue', 'Priya Nair · Lumen Yoga Studio', '1h', '', false],
@@ -40,8 +41,9 @@ export const notifs: [string, string, string, string, string, string, string, bo
   ['trophy', '#15803D', '#F0FDF4', 'Deal won — Dupont Florals', '$4,200 · closed by Maya', 'Yesterday', '', false],
 ];
 
-export function NotificationsList({ onAction }: { onAction?: (a: string) => void }) {
-  return <>{notifs.map(([i, ic, ibg, t, d, w, a, unread]) => (
+export type NotifItem = [string, string, string, string, string, string, string, boolean];
+export function NotificationsList({ onAction, items = notifs }: { onAction?: (a: string) => void; items?: NotifItem[] }) {
+  return <>{items.map(([i, ic, ibg, t, d, w, a, unread]) => (
     <div key={t} style={{ display: 'flex', gap: 12, padding: '14px 18px', borderBottom: '1px solid #F1F5F9', background: unread ? '#F7FAFE' : '#fff' }}>
       <span style={{ width: 38, height: 38, borderRadius: 12, background: ibg, color: ic, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}><Icon n={i} size={17} /></span>
       <div style={{ flex: 1 }}><div style={{ font: '600 14px/1.35 var(--font-display)' }}>{t}</div><div style={{ marginTop: 2, font: '500 12.5px/1.4 var(--font-body)', color: '#64748B' }}>{d}</div>{a && <Button size="sm" style={{ marginTop: 8, height: 34, fontSize: 12.5 }} onClick={() => onAction?.(a)}>{a}</Button>}</div>
@@ -50,7 +52,7 @@ export function NotificationsList({ onAction }: { onAction?: (a: string) => void
 }
 
 export function System() {
-  const mLeads = leads.slice(0, 7);
+  const mLeads = sampleLeads;
   const stages: [string, string][] = [['New', '#94A3B8'], ['Contacted', '#1E88E5'], ['Qualified', '#0F4C81'], ['Meeting', '#5B4FD6'], ['Proposal', '#D97706'], ['Won', '#16A34A'], ['Lost', '#DC2626']];
   return (
     <div style={{ background: '#EEF1F5', padding: 'clamp(20px,4vw,64px)', display: 'flex', flexDirection: 'column', gap: 72 }}>
@@ -194,7 +196,7 @@ export function System() {
               <div style={{ display: 'flex', gap: 6, overflow: 'hidden' }}>{['All', 'High intent', 'Mine', 'Unassigned'].map((l, i) => <span key={l} style={{ height: 34, padding: '0 14px', borderRadius: 99, display: 'flex', alignItems: 'center', font: '600 13px/1 var(--font-display)', whiteSpace: 'nowrap', background: i ? '#fff' : '#0F4C81', color: i ? '#334155' : '#fff', border: `1px solid ${i ? '#E5E7EB' : '#0F4C81'}` }}>{l}</span>)}</div>
             </div>
             <div style={{ flex: 1, overflow: 'hidden' }}>
-              {mLeads.map(l => <div key={l.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: '1px solid #F1F5F9', minHeight: 68 }}><Avatar name={l.name} size={40} /><div style={{ flex: 1, minWidth: 0 }}><div style={{ display: 'flex', justifyContent: 'space-between' }}><b style={{ font: '700 14.5px/1.25 var(--font-display)' }}>{l.name}</b><span style={{ font: '500 12px/1.25 var(--font-body)', color: '#94A3B8' }}>{l.last.replace(' ago', '')}</span></div><div style={{ font: '500 12.5px/1.35 var(--font-body)', color: '#64748B' }}>{l.company}</div><div style={{ marginTop: 5, display: 'flex', gap: 6 }}><Badge size="sm" tone={temp(l.score)[1]}>{l.score} · {temp(l.score)[0]}</Badge><Badge size="sm">{l.stage}</Badge></div></div></div>)}
+              {mLeads.map(l => <div key={l.name} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 18px', borderBottom: '1px solid #F1F5F9', minHeight: 68 }}><Avatar name={l.name} size={40} /><div style={{ flex: 1, minWidth: 0 }}><div style={{ display: 'flex', justifyContent: 'space-between' }}><b style={{ font: '700 14.5px/1.25 var(--font-display)' }}>{l.name}</b><span style={{ font: '500 12px/1.25 var(--font-body)', color: '#94A3B8' }}>{l.last}</span></div><div style={{ font: '500 12.5px/1.35 var(--font-body)', color: '#64748B' }}>{l.company}</div><div style={{ marginTop: 5, display: 'flex', gap: 6 }}><Badge size="sm" tone={temp(l.score)[1]}>{l.score} · {temp(l.score)[0]}</Badge><Badge size="sm">{l.stage}</Badge></div></div></div>)}
             </div>
           </Phone>
           <Phone label="Mobile Lead + Stage" overlay={<><div style={{ position: 'absolute', inset: 0, background: 'rgba(15,23,42,.36)' }} /><div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: '#fff', borderRadius: '24px 24px 0 0', padding: '10px 18px 30px', display: 'flex', flexDirection: 'column', gap: 6 }}><span style={{ alignSelf: 'center', width: 40, height: 5, borderRadius: 3, background: '#CBD5E1', marginBottom: 8 }} /><b style={{ font: '800 18px/1 var(--font-display)', marginBottom: 8 }}>Move to stage</b>{stages.map(([l, d]) => { const on = l === 'Meeting'; return <div key={l} style={{ height: 50, display: 'flex', alignItems: 'center', gap: 12, padding: '0 14px', borderRadius: 12, background: on ? '#EEF5FD' : 'transparent', font: '600 15px/1 var(--font-display)', color: on ? '#0F4C81' : '#0F172A' }}><span style={{ width: 10, height: 10, borderRadius: '50%', background: d }} /><span style={{ flex: 1 }}>{l}</span>{on && <Icon n="check" size={18} />}</div>; })}</div></>}>
