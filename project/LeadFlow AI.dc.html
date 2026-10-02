@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>LeadFlow AI</title>
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/colors.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/typography.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+<script src="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/_ds_bundle.js"></script>
+<style>
+:root{--navy-950:#0B2E4F;--navy-900:#0F4C81;--navy-800:#0D4170;--navy-700:#13589A;--navy-600:#1A6CB5;--navy-500:#1E88E5;--navy-400:#5AA7EC;--navy-300:#93C5F3;--navy-200:#C4DDF7;--navy-100:#E3EFFB;--navy-50:#F2F8FE;
+--emerald-800:#166534;--emerald-700:#15803D;--emerald-600:#16A34A;--emerald-500:#22C55E;--emerald-200:#BBF7D0;--emerald-100:#DCFCE7;--emerald-50:#F0FDF4;
+--violet-600:#5B4FD6;--violet-100:#ECEBFD;--ai:#5B4FD6;--ai-soft:#F4F3FF;--ai-line:#DEDBFB;
+--text-strong:#0F172A;--text-muted:#64748B;--border-soft:#E5E7EB;--bg-app:#F8FAFC;
+--gradient-emerald:linear-gradient(180deg,#2591EA 0%,#1E88E5 100%);--focus-ring:rgba(30,136,229,.3);--glow-emerald:0 0 0 1px rgba(91,79,214,.2),0 8px 28px rgba(91,79,214,.18);}
+html,body{margin:0;background:#F8FAFC;font-family:var(--font-body);color:#0F172A;-webkit-font-smoothing:antialiased}
+a{color:#1E88E5;text-decoration:none}a:hover{color:#0F4C81}
+*{box-sizing:border-box}
+@keyframes lfPulse{0%,100%{opacity:.55}50%{opacity:1}}
+@keyframes lfIn{from{opacity:0;transform:translateY(6px) scale(.98)}to{opacity:1;transform:none}}
+</style>
+</helmet>
+
+<div style="display:flex;height:100vh;overflow:hidden;background:#F8FAFC">
+  <sc-if value="{{ inApp }}" hint-placeholder-val="{{ true }}">
+  <aside style="width:{{ sidebarW }}px;flex-shrink:0;background:#FFFFFF;border-right:1px solid #E5E7EB;display:flex;flex-direction:column;transition:width 220ms cubic-bezier(.16,1,.3,1);overflow:hidden">
+    <div style="height:64px;display:flex;align-items:center;gap:10px;padding:0 18px;border-bottom:1px solid #F1F5F9">
+      <div style="width:30px;height:30px;border-radius:9px;background:#0F4C81;display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative">
+        <i class="icon-waves" style="color:#FFFFFF;font-size:16px"></i>
+        <span style="position:absolute;right:-2px;top:-2px;width:9px;height:9px;border-radius:50%;background:#5B4FD6;border:2px solid #FFFFFF"></span>
+      </div>
+      <sc-if value="{{ showLabels }}" hint-placeholder-val="{{ true }}">
+        <div style="font:800 14px/1 var(--font-display);letter-spacing:.06em;color:#0F172A;white-space:nowrap">LEADFLOW <span style="color:#5B4FD6">AI</span></div>
+      </sc-if>
+    </div>
+    <sc-if value="{{ showLabels }}" hint-placeholder-val="{{ true }}">
+      <div style="margin:14px 14px 4px;padding:8px 10px;border:1px solid #E5E7EB;border-radius:12px;display:flex;align-items:center;gap:10px;cursor:pointer">
+        <div style="width:26px;height:26px;border-radius:7px;background:#F1F5F9;color:#0F4C81;font:700 11px/26px var(--font-display);text-align:center">AD</div>
+        <div style="flex:1;min-width:0">
+          <div style="font:500 10px/1.2 var(--font-body);color:#64748B">Workspace</div>
+          <div style="font:600 13px/1.3 var(--font-display);color:#0F172A">Acme Digital</div>
+        </div>
+        <i class="icon-chevrons-up-down" style="color:#94A3B8;font-size:14px"></i>
+      </div>
+    </sc-if>
+    <nav style="flex:1;overflow-y:auto;padding:6px 10px 10px">
+      <sc-for list="{{ navGroups }}" as="g" hint-placeholder-count="4">
+        <div style="margin-top:14px">
+          <sc-if value="{{ g.showLabel }}" hint-placeholder-val="{{ true }}">
+            <div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;padding:0 10px 8px">{{ g.label }}</div>
+          </sc-if>
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+              <div onClick="{{ it.go }}" title="{{ it.label }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:9px;cursor:pointer;background:{{ it.bg }};color:{{ it.fg }};font:{{ it.weight }} 13.5px/1 var(--font-display);white-space:nowrap" style-hover="background:#F1F5F9">
+                <i class="icon-{{ it.icon }}" style="font-size:17px;width:18px;text-align:center;flex-shrink:0"></i>
+                <sc-if value="{{ it.showLabel }}" hint-placeholder-val="{{ true }}"><span style="flex:1">{{ it.label }}</span></sc-if>
+                <sc-if value="{{ it.hasCount }}" hint-placeholder-val="{{ false }}"><span style="font:600 11px/1 var(--font-display);padding:3px 7px;border-radius:99px;background:#F1F5F9;color:#475569">{{ it.count }}</span></sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-for>
+    </nav>
+    <div style="border-top:1px solid #F1F5F9;padding:10px;display:flex;flex-direction:column;gap:2px">
+      <div style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:9px;color:#475569;font:500 13.5px/1 var(--font-display);cursor:pointer;white-space:nowrap" style-hover="background:#F1F5F9">
+        <i class="icon-life-buoy" style="font-size:17px;width:18px;text-align:center"></i>
+        <sc-if value="{{ showLabels }}" hint-placeholder-val="{{ true }}"><span>Help &amp; Support</span></sc-if>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:10px;cursor:pointer" style-hover="background:#F1F5F9">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Sarah Mitchell" size="{{ 30 }}" status="online" hint-size="30px,30px"></x-import>
+        <sc-if value="{{ showLabels }}" hint-placeholder-val="{{ true }}">
+          <div style="flex:1;min-width:0;white-space:nowrap">
+            <div style="font:600 13px/1.2 var(--font-display);color:#0F172A">Sarah Mitchell</div>
+            <div style="font:500 11px/1.3 var(--font-body);color:#64748B">Owner</div>
+          </div>
+        </sc-if>
+        <div onClick="{{ toggleSidebar }}" title="Collapse sidebar" style="width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;color:#64748B" style-hover="background:#E2E8F0">
+          <i class="icon-panel-left" style="font-size:15px"></i>
+        </div>
+      </div>
+    </div>
+  </aside>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;display:flex;flex-direction:column;overflow:hidden">
+    <sc-if value="{{ inApp }}" hint-placeholder-val="{{ true }}">
+    <header style="height:64px;flex-shrink:0;background:#FFFFFF;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:12px;padding:0 24px">
+      <div onClick="{{ openCmd }}" style="flex:1;max-width:440px;height:38px;border:1px solid #E5E7EB;border-radius:11px;background:#F8FAFC;display:flex;align-items:center;gap:10px;padding:0 12px;cursor:text;color:#94A3B8">
+        <i class="icon-search" style="font-size:15px"></i>
+        <span style="flex:1;font:500 13px/1 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Search leads, companies, conversations…</span>
+        <span style="font:600 11px/1 var(--font-mono);color:#64748B;border:1px solid #E5E7EB;background:#FFFFFF;padding:3px 6px;border-radius:6px">⌘K</span>
+      </div>
+      <div style="flex:1"></div>
+      <div style="height:36px;display:flex;align-items:center;gap:8px;padding:0 12px;border:1px solid #E5E7EB;border-radius:10px;font:600 13px/1 var(--font-display);color:#334155;cursor:pointer;white-space:nowrap">
+        <i class="icon-calendar" style="font-size:15px;color:#64748B"></i>Last 30 days<i class="icon-chevron-down" style="font-size:14px;color:#94A3B8"></i>
+      </div>
+      <div style="position:relative;width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:#475569;cursor:pointer" style-hover="background:#F1F5F9">
+        <i class="icon-bell" style="font-size:18px"></i>
+        <span style="position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:#EF4444;border:1.5px solid #FFFFFF"></span>
+      </div>
+      <div onClick="{{ goAssistant }}" style="height:36px;display:flex;align-items:center;gap:8px;padding:0 12px;border-radius:10px;background:#F4F3FF;border:1px solid #DEDBFB;color:#5B4FD6;font:600 13px/1 var(--font-display);cursor:pointer;white-space:nowrap" style-hover="background:#ECEBFD">
+        <i class="icon-sparkles" style="font-size:15px"></i>Ask AI
+      </div>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Sarah Mitchell" size="{{ 34 }}" hint-size="34px,34px"></x-import>
+    </header>
+    </sc-if>
+
+    <div style="flex:1;overflow-y:auto">
+      <sc-if value="{{ is.dashboard }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Dashboard" style="max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:20px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 28px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Good morning, Sarah 👋</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">Here’s what’s happening with your leads today.</p>
+    </div>
+    <div style="display:flex;gap:8px">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="110px,34px"><i class="icon-download" style="font-size:14px"></i>Export</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" on-click="{{ nav.leads }}" hint-size="110px,34px"><i class="icon-plus" style="font-size:14px"></i>Add lead</x-import>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px">
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="New Leads" value="42" delta="18.4%" trend="up" hint-size="100%,124px"></x-import>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="Qualified Leads" value="18" delta="12.2%" trend="up" hint-size="100%,124px"></x-import>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="Follow-ups Due" value="7" delta="3 overdue" trend="down" hint-size="100%,124px"></x-import>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="Pipeline Value" value="$24,500" delta="21.5%" trend="up" hint-size="100%,124px"></x-import>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="Conversion Rate" value="12.4%" delta="vs 11.1%" trend="flat" hint-size="100%,124px"></x-import>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px">
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F1F5F9">
+        <div>
+          <div style="font:700 15px/1.2 var(--font-display);color:#0F172A">Lead funnel</div>
+          <div style="font:500 12px/1.4 var(--font-body);color:#64748B;margin-top:2px">Last 30 days · 2.4% end-to-end</div>
+        </div>
+        <span onClick="{{ nav.analytics }}" style="font:600 13px/1 var(--font-display);color:#1E88E5;cursor:pointer">Full report →</span>
+      </div>
+      <div style="padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:90px minmax(0,1fr) 120px;align-items:center;gap:14px">
+            <span style="font:600 13px/1 var(--font-display);color:#334155">{{ f.name }}</span>
+            <div style="height:30px;background:#F8FAFC;border-radius:8px;overflow:hidden">
+              <div style="width:{{ f.w }}%;height:100%;background:{{ f.color }};border-radius:8px;display:flex;align-items:center;padding-left:10px;font:700 12px/1 var(--font-display);color:#FFFFFF;font-variant-numeric:tabular-nums">{{ f.n }}</div>
+            </div>
+            <span style="font:500 12px/1 var(--font-body);color:{{ f.dropColor }};text-align:right">{{ f.drop }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(180deg,#F7F6FF 0%,#FFFFFF 60%);border:1px solid #DEDBFB;border-radius:18px;display:flex;flex-direction:column">
+      <div style="display:flex;align-items:center;gap:10px;padding:16px 20px;border-bottom:1px solid #ECEBFD">
+        <div style="width:28px;height:28px;border-radius:8px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-sparkles" style="font-size:15px"></i></div>
+        <div style="font:700 15px/1 var(--font-display);color:#0F172A;flex:1">AI Insights</div>
+        <span style="font:500 11px/1 var(--font-body);color:#64748B">Updated 4 min ago</span>
+      </div>
+      <div style="padding:8px 20px 18px;display:flex;flex-direction:column">
+        <sc-for list="{{ insights }}" as="ins" hint-placeholder-count="2">
+          <div style="padding:14px 0;border-bottom:{{ ins.border }};display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:{{ ins.tagColor }}">{{ ins.tag }}</span>
+            </div>
+            <p style="margin:0;font:500 14px/1.5 var(--font-body);color:#0F172A;text-wrap:pretty">{{ ins.text }}</p>
+            <span onClick="{{ ins.go }}" style="font:600 13px/1 var(--font-display);color:#5B4FD6;cursor:pointer">{{ ins.cta }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px">
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F1F5F9">
+        <div style="font:700 15px/1.2 var(--font-display);color:#0F172A">Lead sources</div>
+        <div style="display:flex;gap:16px;font:500 12px/1 var(--font-body);color:#64748B"><span>Leads</span><span>Conv.</span></div>
+      </div>
+      <div style="padding:14px 20px 18px;display:flex;flex-direction:column;gap:14px">
+        <sc-for list="{{ sources }}" as="s" hint-placeholder-count="6">
+          <div style="display:grid;grid-template-columns:22px 96px minmax(0,1fr) 40px 48px;align-items:center;gap:10px">
+            <i class="icon-{{ s.icon }}" style="font-size:15px;color:#64748B"></i>
+            <span style="font:600 13px/1 var(--font-display);color:#334155">{{ s.name }}</span>
+            <div style="height:8px;background:#F1F5F9;border-radius:99px;overflow:hidden"><div style="width:{{ s.w }}%;height:100%;background:#1E88E5;border-radius:99px"></div></div>
+            <span style="font:600 13px/1 var(--font-display);color:#0F172A;text-align:right;font-variant-numeric:tabular-nums">{{ s.n }}</span>
+            <span style="font:700 12px/1 var(--font-display);color:{{ s.cColor }};text-align:right;font-variant-numeric:tabular-nums">{{ s.conv }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #F1F5F9">
+        <div style="font:700 15px/1.2 var(--font-display);color:#0F172A">Follow-ups due today</div>
+        <span onClick="{{ nav.tasks }}" style="font:600 13px/1 var(--font-display);color:#1E88E5;cursor:pointer">All tasks →</span>
+      </div>
+      <div style="padding:6px 8px 10px">
+        <sc-for list="{{ followups }}" as="u" hint-placeholder-count="5">
+          <div onClick="{{ nav.detail }}" style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;cursor:pointer" style-hover="background:#F8FAFC">
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ u.name }}" size="{{ 32 }}" hint-size="32px,32px"></x-import>
+            <div style="flex:1;min-width:0">
+              <div style="font:600 13.5px/1.3 var(--font-display);color:#0F172A">{{ u.name }}</div>
+              <div style="font:500 12px/1.4 var(--font-body);color:#64748B">{{ u.company }} · {{ u.what }}</div>
+            </div>
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.LeadScore" score="{{ u.score }}" size="sm" show-bar="{{ false }}" hint-size="56px,20px"></x-import>
+            <span style="font:600 12px/1 var(--font-display);color:{{ u.timeColor }};width:62px;text-align:right">{{ u.time }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.leads }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Leads" style="max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Leads</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">248 leads · 42 new this week</p>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="96px,34px"><i class="icon-upload" style="font-size:14px"></i>Import</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="96px,34px"><i class="icon-download" style="font-size:14px"></i>Export</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="110px,34px"><i class="icon-plus" style="font-size:14px"></i>Add Lead</x-import>
+    </div>
+  </div>
+
+  <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);overflow:hidden">
+    <div style="display:flex;align-items:center;gap:4px;padding:0 16px;border-bottom:1px solid #F1F5F9">
+      <sc-for list="{{ leadTabs }}" as="t" hint-placeholder-count="4">
+        <div style="padding:14px 10px 12px;font:600 13px/1 var(--font-display);color:{{ t.fg }};border-bottom:2px solid {{ t.line }};cursor:pointer;display:flex;gap:6px;align-items:center">{{ t.label }}<span style="font:600 11px/1 var(--font-display);color:#94A3B8">{{ t.n }}</span></div>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid #F1F5F9;flex-wrap:wrap">
+      <div style="flex:1;min-width:240px;max-width:380px;height:36px;border:1px solid #E5E7EB;border-radius:10px;display:flex;align-items:center;gap:8px;padding:0 12px;color:#94A3B8">
+        <i class="icon-search" style="font-size:15px"></i><span style="font:500 13px/1 var(--font-body);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Search leads, companies or conversations...</span>
+      </div>
+      <sc-for list="{{ filters }}" as="fl" hint-placeholder-count="6">
+        <div style="height:32px;display:flex;align-items:center;gap:6px;padding:0 10px;border:1px dashed {{ fl.bd }};background:{{ fl.bg }};border-radius:9px;font:600 12.5px/1 var(--font-display);color:{{ fl.fg }};cursor:pointer;white-space:nowrap"><i class="icon-{{ fl.icon }}" style="font-size:13px"></i>{{ fl.label }}</div>
+      </sc-for>
+      <div style="flex:1"></div>
+      <span style="font:600 12.5px/1 var(--font-display);color:#64748B;display:flex;gap:6px;align-items:center;cursor:pointer"><i class="icon-sliders-horizontal" style="font-size:14px"></i>Filters</span>
+    </div>
+    <div style="overflow-x:auto">
+      <div style="min-width:1060px">
+        <div style="display:grid;grid-template-columns:36px minmax(170px,1.4fr) minmax(150px,1.2fr) 110px 130px 110px 120px 100px 140px 44px;align-items:center;padding:0 16px;height:40px;background:#F8FAFC;border-bottom:1px solid #F1F5F9;font:600 11px/1 var(--font-display);letter-spacing:.04em;color:#64748B;text-transform:uppercase">
+          <span><span style="display:inline-block;width:15px;height:15px;border:1.5px solid #CBD5E1;border-radius:4px;background:#FFFFFF"></span></span>
+          <span>Lead</span><span>Company</span><span>Source</span><span>Score</span><span>Stage</span><span>Assigned to</span><span>Last activity</span><span>Next follow-up</span><span></span>
+        </div>
+        <sc-for list="{{ leads }}" as="l" hint-placeholder-count="8">
+          <div onClick="{{ nav.detail }}" style="display:grid;grid-template-columns:36px minmax(170px,1.4fr) minmax(150px,1.2fr) 110px 130px 110px 120px 100px 140px 44px;align-items:center;padding:0 16px;height:56px;border-bottom:1px solid #F1F5F9;cursor:pointer;background:{{ l.rowBg }}" style-hover="background:#F8FAFC">
+            <span><span style="display:inline-flex;align-items:center;justify-content:center;width:15px;height:15px;border:1.5px solid {{ l.ckBd }};border-radius:4px;background:{{ l.ckBg }};color:#FFFFFF;font-size:10px"><i class="icon-check" style="display:{{ l.ckShow }}"></i></span></span>
+            <div style="display:flex;align-items:center;gap:10px;min-width:0">
+              <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ l.name }}" size="{{ 30 }}" hint-size="30px,30px"></x-import>
+              <div style="min-width:0"><div style="font:600 13.5px/1.25 var(--font-display);color:#0F172A;white-space:nowrap">{{ l.name }}</div><div style="font:500 12px/1.3 var(--font-body);color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.email }}</div></div>
+            </div>
+            <span style="font:500 13px/1.3 var(--font-body);color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ l.company }}</span>
+            <span style="display:flex;align-items:center;gap:6px;font:500 13px/1 var(--font-body);color:#334155"><i class="icon-{{ l.srcIcon }}" style="font-size:14px;color:#64748B"></i>{{ l.source }}</span>
+            <span style="display:flex;align-items:center;gap:8px">
+              <span style="font:700 13px/1 var(--font-display);color:#0F172A;font-variant-numeric:tabular-nums;width:20px">{{ l.score }}</span>
+              <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ l.tempTone }}" size="sm" hint-size="60px,20px">{{ l.temp }}</x-import>
+            </span>
+            <span><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ l.stageTone }}" dot="{{ true }}" size="sm" hint-size="80px,20px">{{ l.stage }}</x-import></span>
+            <span style="display:flex;align-items:center;gap:8px;font:500 13px/1 var(--font-body);color:#334155"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ l.rep }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>{{ l.repFirst }}</span>
+            <span style="font:500 13px/1 var(--font-body);color:#64748B">{{ l.last }}</span>
+            <span style="font:600 12.5px/1.3 var(--font-display);color:{{ l.nextColor }}">{{ l.next }}</span>
+            <span style="color:#94A3B8;text-align:center"><i class="icon-ellipsis" style="font-size:16px"></i></span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;font:500 12.5px/1 var(--font-body);color:#64748B">
+      <span>Showing 1–10 of 248</span>
+      <div style="display:flex;gap:6px"><span style="padding:7px 10px;border:1px solid #E5E7EB;border-radius:8px">Previous</span><span style="padding:7px 10px;border:1px solid #E5E7EB;border-radius:8px;color:#0F172A">Next</span></div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.detail }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Lead Detail" style="max-width:1320px;margin:0 auto;padding:22px 28px 28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;gap:6px;font:500 13px/1 var(--font-body);color:#64748B"><span onClick="{{ nav.leads }}" style="cursor:pointer">Leads</span><i class="icon-chevron-right" style="font-size:13px"></i><span style="color:#0F172A">John Smith</span></div>
+  <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="John Smith" size="{{ 56 }}" hint-size="56px,56px"></x-import>
+    <div style="flex:1;min-width:240px">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">John Smith</h1>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="navy" dot="{{ true }}" hint-size="80px,22px">Qualified</x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="violet" hint-size="150px,22px">87 / 100 — High Intent</x-import>
+      </div>
+      <div style="margin-top:6px;font:500 14px/1.4 var(--font-body);color:#64748B">ABC Construction · Owner · Austin, TX</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="80px,34px"><i class="icon-phone" style="font-size:14px"></i>Call</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="96px,34px"><i class="icon-message-circle" style="font-size:14px"></i>Message</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="84px,34px"><i class="icon-mail" style="font-size:14px"></i>Email</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="130px,34px"><i class="icon-calendar-plus" style="font-size:14px"></i>Book Meeting</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" size="sm" hint-size="40px,34px"><i class="icon-ellipsis" style="font-size:16px"></i></x-import>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(0,1fr));gap:0;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;overflow:hidden">
+    <sc-for list="{{ stages }}" as="st" hint-placeholder-count="7">
+      <div style="padding:11px 8px;text-align:center;font:600 12px/1 var(--font-display);background:{{ st.bg }};color:{{ st.fg }};border-right:1px solid #F1F5F9">{{ st.name }}</div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;align-items:start">
+    <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid #F1F5F9"><span style="font:700 15px/1 var(--font-display);color:#0F172A">Lead information</span><i class="icon-pencil" style="font-size:14px;color:#94A3B8"></i></div>
+        <div style="padding:8px 20px 14px">
+          <sc-for list="{{ leadInfo }}" as="r" hint-placeholder-count="10">
+            <div style="display:grid;grid-template-columns:100px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid #F8FAFC">
+              <span style="font:500 12.5px/1.4 var(--font-body);color:#64748B">{{ r.k }}</span>
+              <span style="font:600 13px/1.4 var(--font-display);color:{{ r.c }};overflow-wrap:anywhere">{{ r.v }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+        <span style="font:700 15px/1 var(--font-display);color:#0F172A">Tags</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="70px,20px">Website build</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="70px,20px">SEO</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="70px,20px">Q4 budget</x-import>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+      <div style="background:linear-gradient(180deg,#F7F6FF 0%,#FFFFFF 100%);border:1px solid #DEDBFB;border-radius:18px;padding:20px;display:flex;flex-wrap:wrap;gap:22px;align-items:center">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.ProgressRing" value="{{ 87 }}" size="{{ 92 }}" color="#5B4FD6" gradient="{{ false }}" track="#ECEBFD" sublabel="of 100" hint-size="92px,92px"></x-import>
+        <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><i class="icon-sparkles" style="font-size:15px;color:#5B4FD6"></i><span style="font:700 15px/1 var(--font-display);color:#0F172A">AI Lead Analysis</span><span style="font:600 13px/1 var(--font-display);color:#5B4FD6">Lead Score: 87/100</span></div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px 16px">
+            <sc-for list="{{ reasons }}" as="rs" hint-placeholder-count="4">
+              <span style="display:flex;gap:8px;align-items:center;font:500 13px/1.4 var(--font-body);color:#334155"><i class="icon-circle-check" style="color:#16A34A;font-size:14px"></i>{{ rs }}</span>
+            </sc-for>
+          </div>
+        </div>
+        <div style="flex:1 1 220px;max-width:300px;background:#FFFFFF;border:1px solid #DEDBFB;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6">RECOMMENDED ACTION</span>
+          <span style="font:600 14px/1.4 var(--font-display);color:#0F172A">Follow up within the next 4 hours.</span>
+          <div onClick="{{ regen }}" style="height:34px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;justify-content:center;gap:6px;font:600 13px/1 var(--font-display);cursor:pointer" style-hover="background:#4C41C2"><i class="icon-sparkles" style="font-size:14px"></i>Generate Follow-up</div>
+        </div>
+      </div>
+
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #F1F5F9">
+          <span style="font:700 15px/1 var(--font-display);color:#0F172A">Conversation</span>
+          <div style="display:flex;gap:6px">
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="navy" size="sm" hint-size="40px,20px">All</x-import>
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="60px,20px">WhatsApp</x-import>
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="50px,20px">Email</x-import>
+          </div>
+        </div>
+        <div style="padding:16px 20px 8px;display:flex;flex-direction:column;gap:4px">
+          <sc-for list="{{ timeline }}" as="tl" hint-placeholder-count="5">
+            <div style="display:grid;grid-template-columns:32px minmax(0,1fr);gap:12px">
+              <div style="display:flex;flex-direction:column;align-items:center">
+                <div style="width:30px;height:30px;border-radius:50%;background:{{ tl.dotBg }};color:{{ tl.dotFg }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-{{ tl.icon }}" style="font-size:14px"></i></div>
+                <div style="flex:1;width:1.5px;background:#E5E7EB;margin:4px 0;min-height:14px"></div>
+              </div>
+              <div style="padding-bottom:16px;min-width:0">
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font:700 13px/1.2 var(--font-display);color:#0F172A">{{ tl.who }}</span><span style="font:500 12px/1 var(--font-body);color:#94A3B8">{{ tl.meta }}</span></div>
+                <div style="margin-top:6px;display:{{ tl.showMsg }};max-width:560px;padding:10px 14px;border-radius:4px 14px 14px 14px;background:{{ tl.msgBg }};border:1px solid {{ tl.msgBd }};font:500 13.5px/1.5 var(--font-body);color:#1E293B;text-wrap:pretty">{{ tl.text }}</div>
+                <div style="margin-top:4px;display:{{ tl.showNote }};font:500 13px/1.4 var(--font-body);color:#475569">{{ tl.text }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin:0 16px 16px;border:1px solid #E5E7EB;border-radius:16px;overflow:hidden">
+          <div style="background:#F7F6FF;border-bottom:1px solid #ECEBFD;padding:14px 16px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;gap:8px"><i class="icon-sparkles" style="font-size:14px;color:#5B4FD6"></i><span style="font:700 12px/1 var(--font-display);color:#5B4FD6;letter-spacing:.02em">Suggested reply</span><span style="font:500 11px/1 var(--font-body);color:#64748B">Based on 3 messages and his requirements</span></div>
+            <sc-if value="{{ replyLoading }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <div style="height:10px;width:92%;border-radius:6px;background:#E6E3FB;animation:lfPulse 1.1s ease-in-out infinite"></div>
+                <div style="height:10px;width:78%;border-radius:6px;background:#E6E3FB;animation:lfPulse 1.1s ease-in-out .15s infinite"></div>
+                <div style="height:10px;width:54%;border-radius:6px;background:#E6E3FB;animation:lfPulse 1.1s ease-in-out .3s infinite"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ replyReady }}" hint-placeholder-val="{{ true }}">
+              <p style="margin:0;font:500 14px/1.55 var(--font-body);color:#0F172A;text-wrap:pretty">Thanks for sharing your requirements, John. Based on what you've described, our team can build a professional website tailored to your dental clinic. Would you like to schedule a quick 15-minute call?</p>
+            </sc-if>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span style="height:30px;padding:0 12px;border-radius:9px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;gap:6px;font:600 12.5px/1 var(--font-display);cursor:pointer"><i class="icon-corner-down-left" style="font-size:13px"></i>Insert</span>
+              <sc-for list="{{ tones }}" as="tn" hint-placeholder-count="4">
+                <span onClick="{{ tn.go }}" style="height:30px;padding:0 12px;border-radius:9px;background:#FFFFFF;border:1px solid #DEDBFB;color:#4C41C2;display:flex;align-items:center;gap:6px;font:600 12.5px/1 var(--font-display);cursor:pointer" style-hover="background:#F4F3FF">{{ tn.label }}</span>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding:12px 16px;display:flex;align-items:center;gap:10px">
+            <span style="flex:1;font:500 14px/1 var(--font-body);color:#94A3B8">Write a message...</span>
+            <span style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:9px;border:1px solid #E5E7EB;font:600 12px/1 var(--font-display);color:#334155"><i class="icon-message-circle" style="font-size:13px;color:#16A34A"></i>WhatsApp<i class="icon-chevron-down" style="font-size:12px;color:#94A3B8"></i></span>
+            <span onClick="{{ regen }}" style="display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:9px;color:#5B4FD6;font:600 12.5px/1 var(--font-display);cursor:pointer" style-hover="background:#F4F3FF"><i class="icon-sparkles" style="font-size:13px"></i>Generate Reply</span>
+            <span style="width:34px;height:34px;border-radius:10px;background:#0F4C81;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-send-horizontal" style="font-size:15px"></i></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.pipeline }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Pipeline" style="padding:28px 0 28px 28px;display:flex;flex-direction:column;gap:18px;height:100%">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-right:28px">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Pipeline</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">$184,200 open across 46 deals · drag cards to change stage</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" variant="pill" tabs="{{ pipeTabs }}" value="Board" hint-size="160px,40px"></x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="100px,34px"><i class="icon-plus" style="font-size:14px"></i>Add deal</x-import>
+    </div>
+  </div>
+  <div style="flex:1;overflow-x:auto;padding-bottom:8px">
+    <div style="display:flex;gap:14px;padding-right:28px;width:max-content;align-items:flex-start">
+      <sc-for list="{{ columns }}" as="col" hint-placeholder-count="5">
+        <div style="width:268px;flex-shrink:0;background:#F1F5F9;border-radius:16px;padding:10px;display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:8px;padding:4px 6px 6px">
+            <span style="width:8px;height:8px;border-radius:50%;background:{{ col.color }}"></span>
+            <span style="font:700 11.5px/1 var(--font-display);letter-spacing:.06em;color:#334155">{{ col.name }}</span>
+            <span style="font:600 11px/1 var(--font-display);color:#94A3B8">{{ col.count }}</span>
+            <span style="flex:1"></span>
+            <span style="font:600 12px/1 var(--font-display);color:#475569;font-variant-numeric:tabular-nums">{{ col.total }}</span>
+          </div>
+          <sc-for list="{{ col.cards }}" as="k" hint-placeholder-count="3">
+            <div style="background:#FFFFFF;border:1px solid {{ k.bd }};border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:10px;box-shadow:{{ k.shadow }};transform:{{ k.tf }};cursor:grab;transition:box-shadow 160ms,transform 160ms" style-hover="box-shadow:0 8px 20px rgba(15,23,42,.08)">
+              <div style="display:flex;justify-content:space-between;gap:8px">
+                <div style="min-width:0">
+                  <div style="font:700 13.5px/1.25 var(--font-display);color:#0F172A">{{ k.name }}</div>
+                  <div style="font:500 12px/1.35 var(--font-body);color:#64748B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.company }}</div>
+                </div>
+                <span style="font:700 11px/1 var(--font-display);color:{{ k.scoreFg }};background:{{ k.scoreBg }};border-radius:7px;padding:5px 6px;height:max-content;font-variant-numeric:tabular-nums">{{ k.score }}</span>
+              </div>
+              <div style="font:800 16px/1 var(--font-display);letter-spacing:-.01em;color:#0F172A;font-variant-numeric:tabular-nums">{{ k.value }}</div>
+              <div style="display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px solid #F1F5F9">
+                <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ k.rep }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>
+                <span style="font:500 11.5px/1 var(--font-body);color:#94A3B8">{{ k.last }}</span>
+                <span style="flex:1"></span>
+                <span style="display:flex;align-items:center;gap:4px;font:600 11.5px/1 var(--font-display);color:{{ k.nextFg }}"><i class="icon-clock" style="font-size:12px"></i>{{ k.next }}</span>
+              </div>
+            </div>
+          </sc-for>
+          <div style="height:34px;border:1px dashed #CBD5E1;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:6px;font:600 12px/1 var(--font-display);color:#94A3B8;cursor:pointer"><i class="icon-plus" style="font-size:13px"></i>Add</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.inbox }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Inbox" style="display:grid;grid-template-columns:320px minmax(0,1fr) 300px;height:100%;min-height:600px">
+  <div style="border-right:1px solid #E5E7EB;background:#FFFFFF;display:flex;flex-direction:column;min-height:0">
+    <div style="padding:18px 16px 12px;display:flex;flex-direction:column;gap:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between"><span style="font:800 20px/1 var(--font-display);letter-spacing:-.02em;color:#0F172A">Inbox</span><i class="icon-square-pen" style="font-size:17px;color:#64748B"></i></div>
+      <div style="display:flex;gap:6px;overflow-x:auto">
+        <sc-for list="{{ channels }}" as="c" hint-placeholder-count="6">
+          <span style="height:28px;padding:0 10px;border-radius:99px;display:flex;align-items:center;gap:5px;font:600 12px/1 var(--font-display);white-space:nowrap;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.bd }}"><i class="icon-{{ c.icon }}" style="font-size:12px;display:{{ c.iconShow }}"></i>{{ c.label }}</span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex:1;overflow-y:auto">
+      <sc-for list="{{ convos }}" as="cv" hint-placeholder-count="7">
+        <div style="display:flex;gap:12px;padding:12px 16px;border-left:3px solid {{ cv.line }};background:{{ cv.bg }};cursor:pointer" style-hover="background:#F8FAFC">
+          <div style="position:relative;height:max-content">
+            <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ cv.name }}" size="{{ 36 }}" hint-size="36px,36px"></x-import>
+            <span style="position:absolute;right:-3px;bottom:-3px;width:18px;height:18px;border-radius:50%;background:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 1px #E5E7EB"><i class="icon-{{ cv.icon }}" style="font-size:10px;color:{{ cv.iconColor }}"></i></span>
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:8px"><span style="font:{{ cv.weight }} 13.5px/1.3 var(--font-display);color:#0F172A">{{ cv.name }}</span><span style="font:500 11.5px/1.3 var(--font-body);color:#94A3B8;white-space:nowrap">{{ cv.time }}</span></div>
+            <div style="font:500 12.5px/1.4 var(--font-body);color:{{ cv.prevColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cv.preview }}</div>
+          </div>
+          <span style="width:8px;height:8px;border-radius:50%;background:#1E88E5;margin-top:6px;flex-shrink:0;visibility:{{ cv.dot }}"></span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="display:flex;flex-direction:column;min-height:0;background:#F8FAFC">
+    <div style="height:62px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid #E5E7EB;background:#FFFFFF">
+      <div style="flex:1;min-width:0"><div style="font:700 15px/1.2 var(--font-display);color:#0F172A">Ahmed Khan</div><div style="font:500 12px/1.4 var(--font-body);color:#64748B;display:flex;align-items:center;gap:5px"><i class="icon-message-circle" style="font-size:12px;color:#16A34A"></i>WhatsApp · +1 (713) 555-0192</div></div>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="90px,34px"><i class="icon-check" style="font-size:14px"></i>Resolve</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.IconButton" hint-size="34px,34px"><i class="icon-ellipsis" style="font-size:16px"></i></x-import>
+    </div>
+    <div style="flex:1;overflow-y:auto;padding:22px 24px;display:flex;flex-direction:column;gap:12px">
+      <div style="align-self:center;font:600 11px/1 var(--font-display);color:#94A3B8;letter-spacing:.06em">TODAY</div>
+      <sc-for list="{{ thread }}" as="m" hint-placeholder-count="5">
+        <div style="display:flex;flex-direction:column;align-items:{{ m.align }};gap:4px">
+          <div style="max-width:72%;padding:10px 14px;border-radius:{{ m.radius }};background:{{ m.bg }};color:{{ m.fg }};border:1px solid {{ m.bd }};font:500 13.5px/1.5 var(--font-body);text-wrap:pretty">{{ m.text }}</div>
+          <span style="font:500 11px/1 var(--font-body);color:#94A3B8;display:flex;gap:5px;align-items:center"><i class="icon-sparkles" style="font-size:10px;color:#5B4FD6;display:{{ m.aiShow }}"></i>{{ m.meta }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <div style="margin:0 20px 18px;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:16px;box-shadow:var(--shadow-sm)">
+      <div style="padding:12px 14px;font:500 14px/1.5 var(--font-body);color:#94A3B8;min-height:52px">Write a message...</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:8px 10px;border-top:1px solid #F1F5F9">
+        <i class="icon-paperclip" style="font-size:16px;color:#94A3B8;padding:6px"></i><i class="icon-smile" style="font-size:16px;color:#94A3B8;padding:6px"></i><i class="icon-file-text" style="font-size:16px;color:#94A3B8;padding:6px"></i>
+        <span style="flex:1"></span>
+        <span style="display:flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:9px;background:#F4F3FF;border:1px solid #DEDBFB;color:#5B4FD6;font:600 12.5px/1 var(--font-display);cursor:pointer"><i class="icon-sparkles" style="font-size:13px"></i>Generate Reply</span>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="80px,34px">Send</x-import>
+      </div>
+    </div>
+  </div>
+
+  <div style="border-left:1px solid #E5E7EB;background:#FFFFFF;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:18px">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Ahmed Khan" size="{{ 56 }}" hint-size="56px,56px"></x-import>
+      <div style="font:700 15px/1.2 var(--font-display);color:#0F172A">Ahmed Khan</div>
+      <div style="font:500 12.5px/1 var(--font-body);color:#64748B">Brightsmile Dental · Houston</div>
+      <div style="display:flex;gap:6px;margin-top:4px">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="amber" dot="{{ true }}" size="sm" hint-size="70px,20px">Proposal</x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="red" size="sm" hint-size="60px,20px">Hot · 78</x-import>
+      </div>
+    </div>
+    <div style="background:#F7F6FF;border:1px solid #ECEBFD;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:8px">
+      <span style="display:flex;align-items:center;gap:6px;font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6"><i class="icon-sparkles" style="font-size:12px"></i>AI SUMMARY</span>
+      <p style="margin:0;font:500 13px/1.5 var(--font-body);color:#1E293B;text-wrap:pretty">Wants a 6-page clinic site with online booking. Comparing two agencies; price is the deciding factor. Asked for pricing twice.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <span style="font:700 11px/1 var(--font-display);letter-spacing:.06em;color:#94A3B8;margin-bottom:8px">DETAILS</span>
+      <sc-for list="{{ inboxInfo }}" as="r" hint-placeholder-count="4">
+        <div style="display:flex;justify-content:space-between;padding:7px 0;font:500 13px/1.3 var(--font-body)"><span style="color:#64748B">{{ r.k }}</span><span style="color:#0F172A;font-weight:600">{{ r.v }}</span></div>
+      </sc-for>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <span style="font:700 11px/1 var(--font-display);letter-spacing:.06em;color:#94A3B8">TASKS</span>
+      <div style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid #E5E7EB;border-radius:12px"><span style="width:16px;height:16px;border:1.5px solid #CBD5E1;border-radius:5px"></span><span style="flex:1;font:600 13px/1.3 var(--font-display);color:#0F172A">Send proposal</span><span style="font:600 11.5px/1 var(--font-display);color:#0F4C81">11:30 AM</span></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <span style="font:700 11px/1 var(--font-display);letter-spacing:.06em;color:#94A3B8">RECENT ACTIVITY</span>
+      <sc-for list="{{ inboxActivity }}" as="a" hint-placeholder-count="3">
+        <div style="display:flex;gap:10px;font:500 12.5px/1.4 var(--font-body);color:#334155"><span style="width:6px;height:6px;border-radius:50%;background:#CBD5E1;margin-top:6px;flex-shrink:0"></span><span style="flex:1">{{ a.t }}</span><span style="color:#94A3B8;white-space:nowrap">{{ a.w }}</span></div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.tasks }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Tasks" style="max-width:1080px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Tasks</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">7 due today · 1 overdue</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" variant="pill" tabs="{{ taskTabs }}" value="Mine" hint-size="200px,40px"></x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="100px,34px"><i class="icon-plus" style="font-size:14px"></i>New task</x-import>
+    </div>
+  </div>
+  <sc-for list="{{ taskGroups }}" as="tg" hint-placeholder-count="3">
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);overflow:hidden">
+      <div style="display:flex;align-items:center;gap:10px;padding:14px 20px;border-bottom:1px solid #F1F5F9">
+        <span style="font:700 15px/1 var(--font-display);color:#0F172A">{{ tg.name }}</span>
+        <span style="font:600 12px/1 var(--font-display);color:#94A3B8">{{ tg.count }}</span>
+      </div>
+      <sc-for list="{{ tg.items }}" as="t" hint-placeholder-count="3">
+        <div style="display:grid;grid-template-columns:24px minmax(0,1fr) 150px 96px 90px 28px;align-items:center;gap:14px;padding:12px 20px;border-bottom:1px solid #F8FAFC" style-hover="background:#F8FAFC">
+          <span style="width:18px;height:18px;border-radius:6px;border:1.5px solid {{ t.ckBd }};background:{{ t.ckBg }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="icon-check" style="display:{{ t.ckShow }}"></i></span>
+          <div style="min-width:0">
+            <div style="font:600 14px/1.3 var(--font-display);color:{{ t.fg }};text-decoration:{{ t.strike }}">{{ t.title }}</div>
+            <div style="font:500 12px/1.4 var(--font-body);color:#64748B;display:flex;gap:6px;align-items:center"><i class="icon-user" style="font-size:11px"></i>{{ t.lead }}<span style="display:{{ t.remShow }};align-items:center;gap:4px;color:#94A3B8">· <i class="icon-bell-ring" style="font-size:11px"></i>Reminder 15m before</span></div>
+          </div>
+          <span style="display:flex;align-items:center;gap:6px;font:500 12.5px/1 var(--font-body);color:#334155"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ t.who }}" size="{{ 22 }}" hint-size="22px,22px"></x-import>{{ t.who }}</span>
+          <span><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ t.pTone }}" size="sm" hint-size="60px,20px">{{ t.priority }}</x-import></span>
+          <span style="font:600 12.5px/1 var(--font-display);color:{{ t.dueFg }};text-align:right">{{ t.due }}</span>
+          <i class="icon-ellipsis" style="font-size:15px;color:#94A3B8"></i>
+        </div>
+      </sc-for>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.calendar }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Calendar" style="max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:14px">
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">October 2026</h1>
+      <div style="display:flex;gap:4px"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.IconButton" hint-size="34px,34px"><i class="icon-chevron-left" style="font-size:16px"></i></x-import><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.IconButton" hint-size="34px,34px"><i class="icon-chevron-right" style="font-size:16px"></i></x-import></div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <span style="display:flex;align-items:center;gap:6px;font:600 12px/1 var(--font-display);color:#15803D;background:#F0FDF4;border:1px solid #BBF7D0;padding:6px 10px;border-radius:99px"><i class="icon-calendar-check" style="font-size:12px"></i>Google Calendar synced</span>
+      <span style="display:flex;align-items:center;gap:6px;font:600 12px/1 var(--font-display);color:#1E88E5;background:#EEF5FD;border:1px solid #C4DDF7;padding:6px 10px;border-radius:99px"><i class="icon-video" style="font-size:12px"></i>Zoom connected</span>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" variant="pill" tabs="{{ calTabs }}" value="Week" hint-size="180px,40px"></x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="110px,34px"><i class="icon-plus" style="font-size:14px"></i>Schedule</x-import>
+    </div>
+  </div>
+  <div style="display:flex;gap:16px;font:500 12.5px/1 var(--font-body);color:#475569;flex-wrap:wrap">
+    <sc-for list="{{ calLegend }}" as="lg" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:3px;background:{{ lg.c }}"></span>{{ lg.l }}</span></sc-for>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);overflow:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:64px repeat(5,minmax(0,1fr));border-bottom:1px solid #E5E7EB">
+        <span></span>
+        <sc-for list="{{ calDays }}" as="d" hint-placeholder-count="5">
+          <div style="padding:12px;border-left:1px solid #F1F5F9;display:flex;align-items:baseline;gap:8px"><span style="font:600 12px/1 var(--font-display);color:#64748B">{{ d.dow }}</span><span style="font:800 18px/1 var(--font-display);color:{{ d.fg }};background:{{ d.bg }};padding:4px 7px;border-radius:8px">{{ d.n }}</span></div>
+        </sc-for>
+      </div>
+      <div style="display:grid;grid-template-columns:64px repeat(5,minmax(0,1fr));position:relative">
+        <div>
+          <sc-for list="{{ hours }}" as="h" hint-placeholder-count="9"><div style="height:64px;font:500 11px/1 var(--font-body);color:#94A3B8;text-align:right;padding:6px 10px 0 0">{{ h }}</div></sc-for>
+        </div>
+        <sc-for list="{{ calCols }}" as="cc" hint-placeholder-count="5">
+          <div style="position:relative;border-left:1px solid #F1F5F9;background-image:repeating-linear-gradient(180deg,transparent 0,transparent 63px,#F1F5F9 63px,#F1F5F9 64px);height:576px">
+            <sc-for list="{{ cc.events }}" as="ev" hint-placeholder-count="2">
+              <div style="position:absolute;left:4px;right:4px;top:{{ ev.top }}px;height:{{ ev.h }}px;border-radius:9px;background:{{ ev.bg }};border-left:3px solid {{ ev.c }};padding:6px 8px;overflow:hidden;display:flex;flex-direction:column;gap:3px">
+                <span style="font:700 12px/1.2 var(--font-display);color:#0F172A">{{ ev.t }}</span>
+                <span style="font:500 11px/1.2 var(--font-body);color:#475569;display:flex;align-items:center;gap:4px"><i class="icon-{{ ev.icon }}" style="font-size:10px"></i>{{ ev.time }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.automations }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Automations" style="max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Automations</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">6 active · 1,284 actions run this month · 41 hours saved</p>
+    </div>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" on-click="{{ nav.builder }}" hint-size="160px,34px"><i class="icon-plus" style="font-size:14px"></i>Create Automation</x-import>
+  </div>
+  <div style="display:grid;grid-template-columns:minmax(320px,440px) minmax(0,1fr);gap:18px;align-items:start">
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:20px;box-shadow:var(--shadow-card);overflow:hidden">
+      <div style="padding:18px 20px;border-bottom:1px solid #F1F5F9;display:flex;gap:12px;align-items:flex-start">
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px"><span style="font:700 16px/1.25 var(--font-display);color:#0F172A">New Qualified Lead Follow-up</span></div>
+          <div style="margin-top:6px;display:flex;gap:12px;font:500 12px/1 var(--font-body);color:#64748B"><span>Ran 312× · 38% reply rate</span><span>Edited 2d ago</span></div>
+        </div>
+        <span style="width:38px;height:22px;border-radius:99px;background:#16A34A;position:relative;flex-shrink:0"><span style="position:absolute;right:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#FFFFFF"></span></span>
+      </div>
+      <div style="padding:20px;background-color:#FAFBFC;background-image:radial-gradient(#E2E8F0 1px,transparent 1px);background-size:16px 16px;display:flex;flex-direction:column;align-items:center">
+        <sc-for list="{{ flow }}" as="n" hint-placeholder-count="6">
+          <div style="display:flex;flex-direction:column;align-items:center;width:100%">
+            <div style="width:2px;height:18px;background:#CBD5E1;display:{{ n.lineShow }}"></div>
+            <div style="width:100%;max-width:320px;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 2px rgba(15,23,42,.05)">
+              <span style="width:34px;height:34px;border-radius:10px;background:{{ n.bg }};color:{{ n.c }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-{{ n.icon }}" style="font-size:16px"></i></span>
+              <div style="min-width:0"><div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:{{ n.c }}">{{ n.kind }}</div><div style="margin-top:5px;font:600 13.5px/1.3 var(--font-display);color:#0F172A">{{ n.label }}</div></div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+      <sc-for list="{{ autos }}" as="a" hint-placeholder-count="6">
+        <div onClick="{{ nav.builder }}" style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:14px;cursor:pointer;transition:transform 200ms,box-shadow 200ms" style-hover="transform:translateY(-2px);box-shadow:0 12px 28px rgba(15,23,42,.08)">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;gap:4px">
+              <sc-for list="{{ a.steps }}" as="st" hint-placeholder-count="3"><span style="width:28px;height:28px;border-radius:8px;background:{{ st.bg }};color:{{ st.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ st.icon }}" style="font-size:13px"></i></span></sc-for>
+            </div>
+            <span style="width:34px;height:20px;border-radius:99px;background:{{ a.tg }};position:relative"><span style="position:absolute;left:{{ a.knob }}px;top:3px;width:14px;height:14px;border-radius:50%;background:#FFFFFF"></span></span>
+          </div>
+          <div><div style="font:700 14px/1.3 var(--font-display);color:#0F172A">{{ a.name }}</div><div style="margin-top:4px;font:500 12.5px/1.45 var(--font-body);color:#64748B;text-wrap:pretty">{{ a.desc }}</div></div>
+          <div style="display:flex;justify-content:space-between;padding-top:12px;border-top:1px solid #F1F5F9;font:500 12px/1 var(--font-body);color:#64748B"><span>{{ a.runs }}</span><span style="color:{{ a.statFg }};font-weight:600">{{ a.stat }}</span></div>
+        </div>
+      </sc-for>
+      <div onClick="{{ nav.builder }}" style="border:1.5px dashed #CBD5E1;border-radius:18px;padding:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;min-height:170px;cursor:pointer;color:#64748B" style-hover="border-color:#1E88E5;color:#1E88E5">
+        <i class="icon-plus" style="font-size:20px"></i><span style="font:600 13px/1 var(--font-display)">Start from template</span>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.builder }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Automation Builder" style="display:flex;flex-direction:column;height:100%;min-height:640px">
+  <div style="height:58px;flex-shrink:0;display:flex;align-items:center;gap:12px;padding:0 20px;background:#FFFFFF;border-bottom:1px solid #E5E7EB">
+    <span onClick="{{ nav.automations }}" style="display:flex;align-items:center;gap:4px;font:500 13px/1 var(--font-body);color:#64748B;cursor:pointer"><i class="icon-arrow-left" style="font-size:14px"></i>Automations</span>
+    <span style="color:#CBD5E1">/</span>
+    <span style="font:700 14px/1 var(--font-display);color:#0F172A">New Qualified Lead Follow-up</span>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="50px,20px">Draft</x-import>
+    <span style="flex:1"></span>
+    <span style="font:500 12px/1 var(--font-body);color:#94A3B8">Saved just now</span>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="80px,34px"><i class="icon-flask-conical" style="font-size:14px"></i>Test</x-import>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="90px,34px">Publish</x-import>
+  </div>
+  <div style="flex:1;display:grid;grid-template-columns:240px minmax(0,1fr) 320px;min-height:0">
+    <div style="background:#FFFFFF;border-right:1px solid #E5E7EB;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:18px">
+      <sc-for list="{{ palette }}" as="pg" hint-placeholder-count="2">
+        <div style="display:flex;flex-direction:column;gap:4px">
+          <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;padding:0 8px 6px">{{ pg.name }}</span>
+          <sc-for list="{{ pg.items }}" as="pi" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:grab;font:600 13px/1 var(--font-display);color:#334155" style-hover="background:#F8FAFC">
+              <span style="width:28px;height:28px;border-radius:8px;background:{{ pi.bg }};color:{{ pi.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ pi.icon }}" style="font-size:14px"></i></span>{{ pi.label }}
+              <i class="icon-grip-vertical" style="margin-left:auto;font-size:13px;color:#CBD5E1"></i>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+    <div style="overflow:auto;background-color:#F8FAFC;background-image:radial-gradient(#DCE3EC 1px,transparent 1px);background-size:18px 18px;padding:36px 24px;display:flex;flex-direction:column;align-items:center;position:relative">
+      <sc-for list="{{ builderFlow }}" as="n" hint-placeholder-count="6">
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="display:{{ n.lineShow }};flex-direction:column;align-items:center">
+            <div style="width:2px;height:14px;background:#CBD5E1"></div>
+            <span style="width:22px;height:22px;border-radius:50%;background:#FFFFFF;border:1px solid #CBD5E1;color:#94A3B8;display:flex;align-items:center;justify-content:center"><i class="icon-plus" style="font-size:12px"></i></span>
+            <div style="width:2px;height:14px;background:#CBD5E1"></div>
+          </div>
+          <div style="width:300px;background:#FFFFFF;border:{{ n.bd }};border-radius:16px;padding:14px;display:flex;align-items:center;gap:12px;box-shadow:{{ n.shadow }}">
+            <span style="width:38px;height:38px;border-radius:11px;background:{{ n.bg }};color:{{ n.c }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-{{ n.icon }}" style="font-size:17px"></i></span>
+            <div style="flex:1;min-width:0"><div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:{{ n.c }}">{{ n.kind }}</div><div style="margin-top:5px;font:600 14px/1.3 var(--font-display);color:#0F172A">{{ n.label }}</div><div style="margin-top:3px;font:500 12px/1.3 var(--font-body);color:#64748B">{{ n.sub }}</div></div>
+          </div>
+        </div>
+      </sc-for>
+      <div style="margin-top:14px;display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:99px;background:#FFFFFF;border:1px dashed #CBD5E1;font:600 12px/1 var(--font-display);color:#64748B"><i class="icon-plus" style="font-size:13px"></i>Add step</div>
+      <div style="position:absolute;left:16px;bottom:16px;display:flex;gap:4px;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:10px;padding:4px">
+        <span style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#475569"><i class="icon-minus" style="font-size:14px"></i></span><span style="font:600 12px/28px var(--font-display);color:#475569;padding:0 4px">100%</span><span style="width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#475569"><i class="icon-plus" style="font-size:14px"></i></span>
+      </div>
+    </div>
+    <div style="background:#FFFFFF;border-left:1px solid #E5E7EB;overflow-y:auto;display:flex;flex-direction:column">
+      <div style="padding:16px 18px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;gap:10px">
+        <span style="width:32px;height:32px;border-radius:9px;background:#DCFCE7;color:#15803D;display:flex;align-items:center;justify-content:center"><i class="icon-message-circle" style="font-size:16px"></i></span>
+        <div><div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#15803D">THEN</div><div style="margin-top:4px;font:700 14px/1 var(--font-display);color:#0F172A">Send WhatsApp Message</div></div>
+      </div>
+      <div style="padding:18px;display:flex;flex-direction:column;gap:16px">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Select" label="Send from" options="{{ senders }}" hint-size="100%,64px"></x-import>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:600 13px/1 var(--font-display);color:#334155">Message</span><span style="display:flex;align-items:center;gap:4px;font:600 12px/1 var(--font-display);color:#5B4FD6;cursor:pointer"><i class="icon-sparkles" style="font-size:12px"></i>Write with AI</span></div>
+          <div style="border:1px solid #CBD5E1;border-radius:12px;padding:12px;font:500 13.5px/1.55 var(--font-body);color:#0F172A">Hi <span style="background:#EEF5FD;color:#0F4C81;border-radius:5px;padding:1px 5px;font-weight:600">{first_name}</span>, just checking in on your <span style="background:#EEF5FD;color:#0F4C81;border-radius:5px;padding:1px 5px;font-weight:600">{service}</span> project. Do you have 15 minutes this week for a quick call?</div>
+          <span style="font:500 12px/1.4 var(--font-body);color:#94A3B8">Type { to insert a lead field</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border:1px solid #E5E7EB;border-radius:12px">
+          <div><div style="font:600 13px/1.2 var(--font-display);color:#0F172A">Only during business hours</div><div style="font:500 12px/1.4 var(--font-body);color:#64748B">Mon–Fri, 9 AM–6 PM lead's time</div></div>
+          <span style="width:34px;height:20px;border-radius:99px;background:#1E88E5;position:relative;flex-shrink:0"><span style="position:absolute;right:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#FFFFFF"></span></span>
+        </div>
+        <div style="background:#F8FAFC;border-radius:12px;padding:12px;display:flex;gap:10px;font:500 12.5px/1.45 var(--font-body);color:#475569"><i class="icon-info" style="font-size:14px;color:#1E88E5;margin-top:1px"></i><span>Based on last month, this step would reach about 26 leads per week.</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.assistant }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="AI Assistant" style="display:grid;grid-template-columns:260px minmax(0,1fr);height:100%;min-height:600px">
+  <div style="background:#FFFFFF;border-right:1px solid #E5E7EB;padding:16px 12px;display:flex;flex-direction:column;gap:14px;overflow-y:auto">
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" full-width="{{ true }}" hint-size="100%,34px"><i class="icon-square-pen" style="font-size:14px"></i>New chat</x-import>
+    <div style="display:flex;flex-direction:column;gap:2px">
+      <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;padding:6px 8px">RECENT</span>
+      <sc-for list="{{ chats }}" as="c" hint-placeholder-count="5">
+        <div style="padding:9px 10px;border-radius:9px;font:500 13px/1.35 var(--font-body);color:{{ c.fg }};background:{{ c.bg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer" style-hover="background:#F8FAFC">{{ c.t }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:flex;flex-direction:column;min-height:0;background:#FFFFFF">
+    <div style="flex:1;overflow-y:auto">
+      <div style="max-width:760px;margin:0 auto;padding:36px 24px;display:flex;flex-direction:column;gap:28px">
+        <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px">
+          <span style="width:44px;height:44px;border-radius:13px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;justify-content:center;box-shadow:var(--glow-emerald)"><i class="icon-sparkles" style="font-size:20px"></i></span>
+          <h1 style="margin:6px 0 0;font:800 24px/1.2 var(--font-display);letter-spacing:-.02em;color:#0F172A">LeadFlow AI Assistant</h1>
+          <p style="margin:0;font:500 14px/1.5 var(--font-body);color:#64748B">Ask questions about your sales pipeline.</p>
+        </div>
+        <div style="align-self:flex-end;max-width:80%;background:#0F4C81;color:#FFFFFF;border-radius:16px 16px 4px 16px;padding:12px 16px;font:500 14.5px/1.5 var(--font-body)">Why are my leads not converting?</div>
+        <div style="display:flex;gap:14px">
+          <span style="width:30px;height:30px;border-radius:9px;background:#F4F3FF;border:1px solid #DEDBFB;color:#5B4FD6;display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-sparkles" style="font-size:14px"></i></span>
+          <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:14px">
+            <p style="margin:0;font:600 15px/1.5 var(--font-display);color:#0F172A">Your biggest drop-off is between Qualified → Meeting.</p>
+            <div style="border:1px solid #E5E7EB;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap"><span style="font:800 34px/1 var(--font-display);letter-spacing:-.03em;color:#DC2626">64%</span><span style="font:600 14px/1.4 var(--font-display);color:#0F172A">of qualified leads don't receive a follow-up within 24 hours.</span></div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ aiBars }}" as="b" hint-placeholder-count="3">
+                  <div style="display:grid;grid-template-columns:150px minmax(0,1fr) 44px;gap:10px;align-items:center;font:500 12.5px/1 var(--font-body);color:#475569"><span>{{ b.l }}</span><div style="height:8px;background:#F1F5F9;border-radius:99px"><div style="width:{{ b.v }}%;height:100%;border-radius:99px;background:{{ b.c }}"></div></div><span style="font-weight:700;color:#0F172A;text-align:right">{{ b.v }}%</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <p style="margin:0;font:500 14px/1.6 var(--font-body);color:#334155;text-wrap:pretty">Leads followed up within 24 hours book a meeting 3.2× more often. The gap is widest for Facebook and Instagram leads that arrive after 6 PM. I recommend an automation that sends a WhatsApp check-in after 24 hours of silence and creates a task for the owner.</p>
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <span onClick="{{ nav.builder }}" style="height:36px;padding:0 14px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;gap:6px;font:600 13px/1 var(--font-display);cursor:pointer" style-hover="background:#4C41C2"><i class="icon-workflow" style="font-size:14px"></i>Create Follow-up Automation</span>
+              <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" on-click="{{ nav.leads }}" hint-size="160px,34px">View Qualified Leads</x-import>
+            </div>
+            <div style="display:flex;gap:12px;color:#94A3B8;font-size:14px"><i class="icon-copy"></i><i class="icon-thumbs-up"></i><i class="icon-thumbs-down"></i><i class="icon-refresh-cw"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div style="max-width:760px;width:100%;margin:0 auto;padding:0 24px 22px;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
+        <sc-for list="{{ prompts }}" as="p" hint-placeholder-count="3"><span style="padding:7px 12px;border-radius:99px;border:1px solid #E5E7EB;font:500 12.5px/1 var(--font-body);color:#475569;cursor:pointer;white-space:nowrap" style-hover="border-color:#DEDBFB;color:#5B4FD6">{{ p }}</span></sc-for>
+      </div>
+      <div style="border:1px solid #CBD5E1;border-radius:16px;padding:12px 12px 12px 16px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-sm)">
+        <span style="flex:1;font:500 14.5px/1.4 var(--font-body);color:#94A3B8">Ask about leads, deals, or team performance…</span>
+        <span style="width:36px;height:36px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-arrow-up" style="font-size:16px"></i></span>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.analyticsLike }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Analytics" style="max-width:1320px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">{{ anTitle }}</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">Sep 2 – Oct 1, 2026 compared with previous 30 days</p>
+    </div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" variant="pill" tabs="{{ rangeTabs }}" value="30D" hint-size="220px,40px"></x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="sm" hint-size="96px,34px"><i class="icon-download" style="font-size:14px"></i>Export</x-import>
+    </div>
+  </div>
+
+  <div style="background:linear-gradient(90deg,#F7F6FF 0%,#FFFFFF 70%);border:1px solid #DEDBFB;border-radius:18px;padding:18px 20px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:16px;align-items:center">
+    <span style="width:36px;height:36px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-sparkles" style="font-size:16px"></i></span>
+    <div style="display:flex;flex-direction:column;gap:6px">
+      <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6">AI INSIGHT</span>
+      <span style="font:600 15px/1.45 var(--font-display);color:#0F172A">Your website leads have a 34% higher qualification rate than social media leads.</span>
+      <span style="font:500 13px/1.4 var(--font-body);color:#475569"><b style="color:#0F172A;font-weight:600">Recommended action:</b> Increase website lead acquisition.</span>
+    </div>
+    <span style="height:36px;padding:0 14px;border-radius:10px;border:1px solid #DEDBFB;background:#FFFFFF;color:#5B4FD6;display:flex;align-items:center;font:600 13px/1 var(--font-display);cursor:pointer;white-space:nowrap">View Recommendation →</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+    <sc-for list="{{ perf }}" as="p" hint-placeholder-count="6">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+        <span style="font:600 12.5px/1 var(--font-display);color:#64748B">{{ p.l }}</span>
+        <span style="font:800 24px/1 var(--font-display);letter-spacing:-.02em;color:#0F172A;font-variant-numeric:tabular-nums">{{ p.v }}</span>
+        <span style="font:700 12px/1 var(--font-display);color:{{ p.dc }}">{{ p.d }}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:16px">
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+      <div style="padding:16px 20px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px/1 var(--font-display);color:#0F172A">Conversion funnel</span><span style="font:500 12px/1 var(--font-body);color:#64748B">New → Won</span></div>
+      <div style="padding:22px 20px 18px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;align-items:end;height:250px">
+        <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="6">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end">
+            <span style="font:700 13px/1 var(--font-display);color:#0F172A;font-variant-numeric:tabular-nums">{{ f.n }}</span>
+            <div style="width:100%;height:{{ f.w }}%;background:{{ f.color }};border-radius:8px 8px 3px 3px;min-height:6px"></div>
+            <span style="font:600 12px/1 var(--font-display);color:#475569">{{ f.name }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+      <div style="padding:16px 20px;border-bottom:1px solid #F1F5F9"><span style="font:700 15px/1 var(--font-display);color:#0F172A">Lead source performance</span></div>
+      <div style="padding:6px 20px 14px">
+        <div style="display:grid;grid-template-columns:minmax(0,1fr) 56px 70px 64px;gap:8px;padding:10px 0;font:600 11px/1 var(--font-display);letter-spacing:.04em;color:#94A3B8;text-transform:uppercase"><span>Source</span><span style="text-align:right">Leads</span><span style="text-align:right">Qualified</span><span style="text-align:right">Won</span></div>
+        <sc-for list="{{ srcPerf }}" as="s" hint-placeholder-count="5">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 56px 70px 64px;gap:8px;padding:10px 0;border-top:1px solid #F8FAFC;font:500 13px/1 var(--font-body);color:#334155;font-variant-numeric:tabular-nums;align-items:center">
+            <span style="display:flex;align-items:center;gap:8px;font-weight:600;color:#0F172A"><i class="icon-{{ s.icon }}" style="font-size:14px;color:#64748B"></i>{{ s.n }}</span><span style="text-align:right">{{ s.leads }}</span><span style="text-align:right;color:{{ s.qc }};font-weight:700">{{ s.q }}</span><span style="text-align:right">{{ s.won }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);overflow:auto">
+    <div style="padding:16px 20px;border-bottom:1px solid #F1F5F9"><span style="font:700 15px/1 var(--font-display);color:#0F172A">Sales performance</span></div>
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(0,1fr));padding:10px 20px;font:600 11px/1 var(--font-display);letter-spacing:.04em;color:#94A3B8;text-transform:uppercase"><span>Team member</span><span>Leads handled</span><span>Response time</span><span>Meetings</span><span>Won deals</span><span>Revenue</span></div>
+      <sc-for list="{{ reps }}" as="r" hint-placeholder-count="4">
+        <div style="display:grid;grid-template-columns:minmax(180px,1.4fr) repeat(5,minmax(0,1fr));padding:12px 20px;border-top:1px solid #F1F5F9;align-items:center;font:500 13px/1 var(--font-body);color:#334155;font-variant-numeric:tabular-nums">
+          <span style="display:flex;align-items:center;gap:10px;font:600 13.5px/1 var(--font-display);color:#0F172A"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ r.n }}" size="{{ 28 }}" hint-size="28px,28px"></x-import>{{ r.n }}</span>
+          <span>{{ r.leads }}</span><span style="color:{{ r.rc }};font-weight:600">{{ r.rt }}</span><span>{{ r.m }}</span><span>{{ r.w }}</span><span style="font-weight:700;color:#0F172A">{{ r.rev }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.integrations }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Integrations" style="max-width:1200px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:22px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Integrations</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">Connect where your leads come from and where your team works. 5 of 10 connected.</p>
+    </div>
+    <div style="width:280px;height:38px;border:1px solid #E5E7EB;border-radius:11px;background:#FFFFFF;display:flex;align-items:center;gap:8px;padding:0 12px;color:#94A3B8"><i class="icon-search" style="font-size:15px"></i><span style="font:500 13px/1 var(--font-body)">Search integrations</span></div>
+  </div>
+  <sc-for list="{{ intGroups }}" as="g" hint-placeholder-count="3">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <span style="font:700 15px/1 var(--font-display);color:#0F172A">{{ g.name }}</span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+        <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="3">
+          <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="width:42px;height:42px;border-radius:12px;background:{{ it.bg }};color:{{ it.c }};display:flex;align-items:center;justify-content:center;font:800 15px/1 var(--font-display)"><i class="icon-{{ it.icon }}" style="font-size:20px"></i></span>
+              <div style="flex:1"><div style="font:700 14px/1.2 var(--font-display);color:#0F172A">{{ it.name }}</div><div style="font:500 12px/1.3 var(--font-body);color:#94A3B8">{{ it.cat }}</div></div>
+            </div>
+            <p style="margin:0;font:500 13px/1.5 var(--font-body);color:#64748B;text-wrap:pretty;flex:1">{{ it.desc }}</p>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <span style="display:{{ it.onShow }};align-items:center;gap:6px;font:600 12.5px/1 var(--font-display);color:#15803D"><span style="width:7px;height:7px;border-radius:50%;background:#16A34A"></span>Connected</span>
+              <span style="display:{{ it.offShow }};font:500 12.5px/1 var(--font-body);color:#94A3B8">Not connected</span>
+              <span style="height:32px;padding:0 14px;border-radius:10px;display:flex;align-items:center;font:600 12.5px/1 var(--font-display);cursor:pointer;background:{{ it.btnBg }};color:{{ it.btnFg }};border:1px solid {{ it.btnBd }}">{{ it.btn }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.team }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Team" style="max-width:1200px;margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <div>
+      <h1 style="margin:0;font:800 26px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Team</h1>
+      <p style="margin:6px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">6 members · 5 of 10 seats used on Growth</p>
+    </div>
+    <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="130px,34px"><i class="icon-user-plus" style="font-size:14px"></i>Invite member</x-import>
+  </div>
+  <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);overflow:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(220px,1.6fr) 130px 120px minmax(160px,1fr) 110px 40px;padding:12px 20px;background:#F8FAFC;font:600 11px/1 var(--font-display);letter-spacing:.04em;color:#64748B;text-transform:uppercase"><span>Member</span><span>Role</span><span>Assigned leads</span><span>Performance</span><span>Status</span><span></span></div>
+      <sc-for list="{{ team }}" as="m" hint-placeholder-count="6">
+        <div style="display:grid;grid-template-columns:minmax(220px,1.6fr) 130px 120px minmax(160px,1fr) 110px 40px;padding:12px 20px;border-top:1px solid #F1F5F9;align-items:center">
+          <span style="display:flex;align-items:center;gap:12px"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ m.n }}" size="{{ 34 }}" status="{{ m.presence }}" hint-size="34px,34px"></x-import><span><span style="display:block;font:600 13.5px/1.3 var(--font-display);color:#0F172A">{{ m.n }}</span><span style="display:block;font:500 12px/1.3 var(--font-body);color:#64748B">{{ m.email }}</span></span></span>
+          <span style="display:flex;align-items:center;gap:4px;font:600 13px/1 var(--font-display);color:#334155">{{ m.role }}<i class="icon-chevron-down" style="font-size:12px;color:#94A3B8"></i></span>
+          <span style="font:600 13px/1 var(--font-display);color:#0F172A;font-variant-numeric:tabular-nums">{{ m.leads }}</span>
+          <span style="display:flex;align-items:center;gap:10px"><span style="flex:1;max-width:110px;height:6px;border-radius:99px;background:#F1F5F9"><span style="display:block;width:{{ m.perf }}%;height:100%;border-radius:99px;background:{{ m.pc }}"></span></span><span style="font:600 12px/1 var(--font-display);color:#475569">{{ m.perfLabel }}</span></span>
+          <span><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ m.sTone }}" size="sm" hint-size="60px,20px">{{ m.status }}</x-import></span>
+          <i class="icon-ellipsis" style="font-size:15px;color:#94A3B8"></i>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px">
+    <sc-for list="{{ roles }}" as="r" hint-placeholder-count="4">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:6px"><span style="font:700 13.5px/1 var(--font-display);color:#0F172A">{{ r.n }}</span><span style="font:500 12.5px/1.45 var(--font-body);color:#64748B">{{ r.d }}</span></div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.settingsLike }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Settings" style="max-width:1200px;margin:0 auto;padding:28px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:28px;align-items:start">
+  <div style="display:flex;flex-direction:column;gap:2px;position:sticky;top:0">
+    <h1 style="margin:0 0 14px 10px;font:800 24px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Settings</h1>
+    <sc-for list="{{ setNav }}" as="s" hint-placeholder-count="11">
+      <div onClick="{{ s.go }}" style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:9px;cursor:pointer;font:{{ s.w }} 13.5px/1 var(--font-display);color:{{ s.fg }};background:{{ s.bg }}" style-hover="background:#F1F5F9"><i class="icon-{{ s.icon }}" style="font-size:15px;width:16px"></i>{{ s.l }}</div>
+    </sc-for>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+    <sc-if value="{{ is.settings }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+        <div style="padding:18px 22px;border-bottom:1px solid #F1F5F9"><div style="font:700 16px/1.2 var(--font-display);color:#0F172A">Workspace</div><div style="margin-top:4px;font:500 13px/1.4 var(--font-body);color:#64748B">How your workspace appears to your team and leads.</div></div>
+        <div style="padding:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Workspace name" default-value="Acme Digital" hint-size="100%,64px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Workspace URL" default-value="acme-digital.leadflow.ai" hint-size="100%,64px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Select" label="Time zone" options="{{ tzs }}" hint-size="100%,64px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Select" label="Currency" options="{{ curr }}" hint-size="100%,64px"></x-import>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+        <div style="padding:18px 22px;border-bottom:1px solid #F1F5F9;display:flex;align-items:center;gap:8px"><i class="icon-sparkles" style="font-size:15px;color:#5B4FD6"></i><span style="font:700 16px/1.2 var(--font-display);color:#0F172A">AI behavior</span></div>
+        <div style="padding:6px 22px 10px">
+          <sc-for list="{{ aiToggles }}" as="t" hint-placeholder-count="4">
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 0;border-bottom:1px solid #F8FAFC">
+              <div><div style="font:600 14px/1.3 var(--font-display);color:#0F172A">{{ t.l }}</div><div style="margin-top:2px;font:500 12.5px/1.45 var(--font-body);color:#64748B">{{ t.d }}</div></div>
+              <span style="width:38px;height:22px;border-radius:99px;background:{{ t.bg }};position:relative;flex-shrink:0"><span style="position:absolute;left:{{ t.k }}px;top:3px;width:16px;height:16px;border-radius:50%;background:#FFFFFF;box-shadow:0 1px 2px rgba(0,0,0,.15)"></span></span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" size="sm" hint-size="80px,34px">Cancel</x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="120px,34px">Save changes</x-import>
+      </div>
+    </sc-if>
+    <sc-if value="{{ is.billing }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card);padding:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px"><span style="font:800 20px/1 var(--font-display);color:#0F172A">Growth plan</span><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="emerald" size="sm" hint-size="50px,20px">Active</x-import></div>
+          <div style="margin-top:8px;font:500 13.5px/1.5 var(--font-body);color:#64748B">$149 / month · billed monthly · renews Nov 1, 2026</div>
+          <div style="margin-top:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px">
+            <sc-for list="{{ usage }}" as="u" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:6px"><div style="display:flex;justify-content:space-between;font:600 12.5px/1 var(--font-display);color:#334155"><span>{{ u.l }}</span><span style="color:#64748B;font-weight:500">{{ u.v }}</span></div><div style="height:6px;border-radius:99px;background:#F1F5F9"><div style="width:{{ u.p }}%;height:100%;border-radius:99px;background:{{ u.c }}"></div></div></div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" hint-size="130px,34px">Upgrade plan</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" size="sm" hint-size="130px,34px">Cancel plan</x-import>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+        <sc-for list="{{ plans }}" as="p" hint-placeholder-count="3">
+          <div style="background:#FFFFFF;border:{{ p.bd }};border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px;position:relative">
+            <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px/1 var(--font-display);color:#0F172A">{{ p.n }}</span><span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#1E88E5">{{ p.tag }}</span></div>
+            <div style="display:flex;align-items:baseline;gap:4px"><span style="font:800 30px/1 var(--font-display);letter-spacing:-.03em;color:#0F172A">{{ p.price }}</span><span style="font:500 13px/1 var(--font-body);color:#64748B">/ month</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ p.f }}" as="f" hint-placeholder-count="4"><span style="display:flex;gap:8px;align-items:center;font:500 13px/1.4 var(--font-body);color:#334155"><i class="icon-check" style="font-size:14px;color:#16A34A"></i>{{ f }}</span></sc-for>
+            </div>
+            <span style="margin-top:auto;height:36px;border-radius:11px;display:flex;align-items:center;justify-content:center;font:600 13px/1 var(--font-display);background:{{ p.btnBg }};color:{{ p.btnFg }};border:1px solid {{ p.btnBd }}">{{ p.btn }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:18px;box-shadow:var(--shadow-card)">
+        <div style="padding:16px 22px;border-bottom:1px solid #F1F5F9;display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px/1 var(--font-display);color:#0F172A">Invoices</span><span style="display:flex;align-items:center;gap:8px;font:500 13px/1 var(--font-body);color:#475569"><i class="icon-credit-card" style="font-size:15px"></i>Visa •••• 4242 · <a href="#">Update</a></span></div>
+        <sc-for list="{{ invoices }}" as="iv" hint-placeholder-count="3">
+          <div style="display:grid;grid-template-columns:minmax(0,1fr) 100px 90px 32px;gap:10px;padding:12px 22px;border-bottom:1px solid #F8FAFC;align-items:center;font:500 13px/1 var(--font-body);color:#334155"><span>{{ iv.d }}</span><span style="font-weight:600;color:#0F172A">{{ iv.a }}</span><span><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="emerald" size="sm" hint-size="40px,20px">Paid</x-import></span><i class="icon-download" style="font-size:15px;color:#94A3B8"></i></div>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+<sc-if value="{{ is.landing }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Landing" style="background:#FFFFFF">
+  <div style="position:sticky;top:0;z-index:5;background:rgba(255,255,255,.85);backdrop-filter:blur(14px);border-bottom:1px solid #F1F5F9">
+    <div style="max-width:1180px;margin:0 auto;height:68px;padding:0 24px;display:flex;align-items:center;gap:28px">
+      <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:9px;background:#0F4C81;display:flex;align-items:center;justify-content:center"><i class="icon-waves" style="color:#FFFFFF;font-size:16px"></i></span><span style="font:800 14px/1 var(--font-display);letter-spacing:.06em;color:#0F172A">LEADFLOW <span style="color:#5B4FD6">AI</span></span></div>
+      <div style="display:flex;gap:24px;font:600 14px/1 var(--font-display);color:#475569"><span>Product</span><span>Automations</span><span>Pricing</span><span>Customers</span></div>
+      <span style="flex:1"></span>
+      <span onClick="{{ nav.login }}" style="font:600 14px/1 var(--font-display);color:#0F172A;cursor:pointer">Log in</span>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="sm" on-click="{{ nav.login }}" hint-size="130px,34px">Start free trial</x-import>
+    </div>
+  </div>
+  <div style="max-width:1180px;margin:0 auto;padding:84px 24px 40px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:22px">
+    <span style="display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:99px;background:#F4F3FF;border:1px solid #DEDBFB;font:600 12.5px/1 var(--font-display);color:#5B4FD6"><i class="icon-sparkles" style="font-size:13px"></i>AI that replies, scores and follows up for you</span>
+    <h1 style="margin:0;max-width:820px;font:800 64px/1.04 var(--font-display);letter-spacing:-.035em;color:#0F172A;text-wrap:balance">Never lose a lead again.</h1>
+    <p style="margin:0;max-width:600px;font:500 18px/1.6 var(--font-body);color:#64748B;text-wrap:pretty">LeadFlow AI captures every lead from your website, ads and WhatsApp, qualifies it in seconds, and tells your team exactly who to follow up with next.</p>
+    <div style="display:flex;gap:10px;margin-top:6px">
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="lg" on-click="{{ nav.login }}" hint-size="170px,50px">Start free trial</x-import>
+      <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" size="lg" on-click="{{ nav.dashboard }}" hint-size="150px,50px"><i class="icon-play" style="font-size:15px"></i>See it live</x-import>
+    </div>
+    <span style="font:500 13px/1 var(--font-body);color:#94A3B8">14-day free trial · No credit card required</span>
+  </div>
+  <div style="max-width:1100px;margin:0 auto;padding:0 24px">
+    <div onClick="{{ nav.dashboard }}" style="border:1px solid #E5E7EB;border-radius:22px;padding:10px;background:#F8FAFC;box-shadow:0 30px 80px rgba(15,76,129,.14);cursor:pointer">
+      <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;padding:22px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;text-align:left">
+        <sc-for list="{{ heroKpis }}" as="k" hint-placeholder-count="4">
+          <div style="border:1px solid #F1F5F9;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px"><span style="font:600 12px/1 var(--font-display);color:#64748B">{{ k.l }}</span><span style="font:800 24px/1 var(--font-display);letter-spacing:-.02em;color:#0F172A">{{ k.v }}</span><span style="font:700 11.5px/1 var(--font-display);color:#15803D">{{ k.d }}</span></div>
+        </sc-for>
+        <div style="grid-column:span 3;border:1px solid #F1F5F9;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px">
+          <sc-for list="{{ funnel }}" as="f" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:10px"><span style="width:70px;font:600 11.5px/1 var(--font-display);color:#475569">{{ f.name }}</span><div style="flex:1;height:16px;background:#F8FAFC;border-radius:5px"><div style="width:{{ f.w }}%;height:100%;border-radius:5px;background:{{ f.color }}"></div></div></div></sc-for>
+        </div>
+        <div style="border:1px solid #DEDBFB;background:#F7F6FF;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px"><span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6">AI INSIGHT</span><span style="font:600 13px/1.45 var(--font-display);color:#0F172A">7 qualified leads haven't received a follow-up in 24 hours.</span><span style="font:600 12px/1 var(--font-display);color:#5B4FD6">Review Leads →</span></div>
+      </div>
+    </div>
+  </div>
+  <div style="max-width:1180px;margin:0 auto;padding:96px 24px 40px">
+    <div style="font:700 12px/1 var(--font-display);letter-spacing:.08em;color:#1E88E5;margin-bottom:14px">HOW IT WORKS</div>
+    <h2 style="margin:0 0 40px;max-width:640px;font:800 38px/1.12 var(--font-display);letter-spacing:-.03em;color:#0F172A;text-wrap:balance">From first message to closed deal, on autopilot.</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px">
+      <sc-for list="{{ features }}" as="f" hint-placeholder-count="4">
+        <div style="border:1px solid #E5E7EB;border-radius:18px;padding:22px;display:flex;flex-direction:column;gap:12px">
+          <span style="font:700 12px/1 var(--font-mono);color:#94A3B8">{{ f.n }}</span>
+          <span style="width:40px;height:40px;border-radius:11px;background:{{ f.bg }};color:{{ f.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ f.icon }}" style="font-size:19px"></i></span>
+          <span style="font:700 17px/1.25 var(--font-display);color:#0F172A">{{ f.t }}</span>
+          <span style="font:500 14px/1.55 var(--font-body);color:#64748B;text-wrap:pretty">{{ f.d }}</span>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="max-width:1180px;margin:0 auto;padding:56px 24px 96px">
+    <div style="background:#0F4C81;border-radius:28px;padding:56px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+      <div><h2 style="margin:0;font:800 34px/1.15 var(--font-display);letter-spacing:-.03em;color:#FFFFFF">Reply to every lead in under a minute.</h2><p style="margin:10px 0 0;font:500 16px/1.5 var(--font-body);color:#C4DDF7">Set up in 10 minutes. Connect your first lead source free.</p></div>
+      <span onClick="{{ nav.login }}" style="height:50px;padding:0 24px;border-radius:14px;background:#FFFFFF;color:#0F4C81;display:flex;align-items:center;font:700 15px/1 var(--font-display);cursor:pointer">Start free trial</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;padding-top:40px;font:500 13px/1 var(--font-body);color:#94A3B8;flex-wrap:wrap;gap:12px"><span>© 2026 LeadFlow AI, Inc.</span><span style="display:flex;gap:20px"><span>Privacy</span><span>Terms</span><span>Security</span><span>Status</span></span></div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.login }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Login / Signup" style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:100%">
+  <div style="display:flex;flex-direction:column;padding:32px 48px;background:#FFFFFF">
+    <div onClick="{{ nav.landing }}" style="display:flex;align-items:center;gap:10px;cursor:pointer"><span style="width:30px;height:30px;border-radius:9px;background:#0F4C81;display:flex;align-items:center;justify-content:center"><i class="icon-waves" style="color:#FFFFFF;font-size:16px"></i></span><span style="font:800 14px/1 var(--font-display);letter-spacing:.06em;color:#0F172A">LEADFLOW <span style="color:#5B4FD6">AI</span></span></div>
+    <div style="flex:1;display:flex;align-items:center;justify-content:center">
+      <div style="width:100%;max-width:380px;display:flex;flex-direction:column;gap:18px">
+        <div><h1 style="margin:0;font:800 28px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Create your account</h1><p style="margin:8px 0 0;font:500 14px/1.5 var(--font-body);color:#64748B">Start your 14-day free trial. No credit card required.</p></div>
+        <div style="height:44px;border:1px solid #CBD5E1;border-radius:14px;display:flex;align-items:center;justify-content:center;gap:10px;font:600 14px/1 var(--font-display);color:#0F172A;cursor:pointer"><span style="font:800 15px/1 var(--font-display);color:#EA4335">G</span>Continue with Google</div>
+        <div style="display:flex;align-items:center;gap:12px;font:500 12px/1 var(--font-body);color:#94A3B8"><span style="flex:1;height:1px;background:#E5E7EB"></span>or<span style="flex:1;height:1px;background:#E5E7EB"></span></div>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Full name" placeholder="Sarah Mitchell" hint-size="100%,64px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Work email" placeholder="sarah@acmedigital.com" hint-size="100%,64px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Password" type="password" placeholder="At least 8 characters" hint-size="100%,64px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" size="lg" full-width="{{ true }}" on-click="{{ nav.onboarding }}" hint-size="100%,50px">Create account</x-import>
+        <p style="margin:0;text-align:center;font:500 13px/1.5 var(--font-body);color:#64748B">Already have an account? <a href="#" onClick="{{ nav.dashboard }}" style="font-weight:600">Log in</a></p>
+      </div>
+    </div>
+  </div>
+  <div style="background:#0F4C81;padding:48px;display:flex;flex-direction:column;justify-content:center;gap:28px">
+    <div style="max-width:440px;display:flex;flex-direction:column;gap:14px">
+      <sc-for list="{{ loginFeed }}" as="lf" hint-placeholder-count="3">
+        <div style="background:#FFFFFF;border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:center;box-shadow:0 12px 30px rgba(0,0,0,.18)">
+          <span style="width:34px;height:34px;border-radius:10px;background:{{ lf.bg }};color:{{ lf.c }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-{{ lf.icon }}" style="font-size:16px"></i></span>
+          <div style="flex:1;min-width:0"><div style="font:700 13.5px/1.3 var(--font-display);color:#0F172A">{{ lf.t }}</div><div style="font:500 12px/1.4 var(--font-body);color:#64748B">{{ lf.d }}</div></div>
+          <span style="font:500 11px/1 var(--font-body);color:#94A3B8">{{ lf.w }}</span>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:0;max-width:440px;font:600 20px/1.45 var(--font-display);color:#FFFFFF;text-wrap:pretty">“We used to lose a third of our Facebook leads overnight. Now every one gets a reply in under a minute.”</p>
+    <span style="font:500 13px/1 var(--font-body);color:#C4DDF7">Rachel Gomez · Founder, Brightline Studio</span>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ is.onboarding }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Onboarding" style="min-height:100%;background:#F8FAFC;display:flex;flex-direction:column">
+  <div style="height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;background:#FFFFFF;border-bottom:1px solid #E5E7EB">
+    <div style="display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;border-radius:9px;background:#0F4C81;display:flex;align-items:center;justify-content:center"><i class="icon-waves" style="color:#FFFFFF;font-size:16px"></i></span><span style="font:800 14px/1 var(--font-display);letter-spacing:.06em;color:#0F172A">LEADFLOW <span style="color:#5B4FD6">AI</span></span></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <sc-for list="{{ obSteps }}" as="o" hint-placeholder-count="3">
+        <span style="display:flex;align-items:center;gap:8px;font:600 13px/1 var(--font-display);color:{{ o.fg }}"><span style="width:22px;height:22px;border-radius:50%;background:{{ o.bg }};color:{{ o.nfg }};display:flex;align-items:center;justify-content:center;font:700 11px/1 var(--font-display)">{{ o.n }}</span>{{ o.l }}<span style="width:28px;height:1.5px;background:#E5E7EB;display:{{ o.sep }}"></span></span>
+      </sc-for>
+    </div>
+    <span onClick="{{ nav.dashboard }}" style="font:600 13px/1 var(--font-display);color:#64748B;cursor:pointer">Skip for now</span>
+  </div>
+  <div style="flex:1;display:flex;justify-content:center;padding:56px 24px">
+    <div style="width:100%;max-width:720px;display:flex;flex-direction:column;gap:24px">
+      <div><span style="font:600 13px/1 var(--font-display);color:#1E88E5">Step 2 of 3</span><h1 style="margin:10px 0 0;font:800 30px/1.15 var(--font-display);letter-spacing:-.025em;color:#0F172A">Where do your leads come from?</h1><p style="margin:8px 0 0;font:500 15px/1.5 var(--font-body);color:#64748B">Connect at least one source. You can add more anytime from Integrations.</p></div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+        <sc-for list="{{ obSources }}" as="s" hint-placeholder-count="6">
+          <div style="background:#FFFFFF;border:{{ s.bd }};border-radius:16px;padding:16px;display:flex;align-items:center;gap:12px;cursor:pointer;box-shadow:{{ s.sh }}">
+            <span style="width:38px;height:38px;border-radius:11px;background:{{ s.bg }};color:{{ s.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ s.icon }}" style="font-size:18px"></i></span>
+            <span style="flex:1;font:600 14px/1.2 var(--font-display);color:#0F172A">{{ s.n }}</span>
+            <span style="width:20px;height:20px;border-radius:6px;border:1.5px solid {{ s.ckBd }};background:{{ s.ckBg }};color:#FFFFFF;display:flex;align-items:center;justify-content:center;font-size:12px"><i class="icon-check" style="display:{{ s.ck }}"></i></span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;gap:12px;padding:14px 16px;border-radius:14px;background:#F4F3FF;border:1px solid #ECEBFD;font:500 13.5px/1.5 var(--font-body);color:#334155"><i class="icon-sparkles" style="font-size:16px;color:#5B4FD6;margin-top:2px"></i><span>Once connected, I'll import the last 30 days of leads, score them, and flag who needs a follow-up first.</span></div>
+      <div style="display:flex;justify-content:space-between">
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" on-click="{{ nav.login }}" hint-size="90px,42px">Back</x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" on-click="{{ nav.dashboard }}" hint-size="190px,42px">Connect 2 sources<i class="icon-arrow-right" style="font-size:15px"></i></x-import>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+<!--SCREENS-->
+    </div>
+  </main>
+
+  <sc-if value="{{ cmd }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeCmd }}" style="position:fixed;inset:0;background:rgba(15,23,42,.32);display:flex;justify-content:center;padding-top:14vh;z-index:50">
+      <div onClick="{{ stop }}" style="width:600px;max-width:92vw;height:max-content;background:#FFFFFF;border-radius:18px;box-shadow:0 24px 64px rgba(15,23,42,.24);overflow:hidden;animation:lfIn 180ms cubic-bezier(.16,1,.3,1)">
+        <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid #F1F5F9">
+          <i class="icon-search" style="font-size:18px;color:#94A3B8"></i>
+          <input autofocus="{{ true }}" placeholder="Search leads or type a command…" style="flex:1;border:0;outline:0;font:500 15px/1 var(--font-body);color:#0F172A;background:transparent">
+          <span style="font:600 11px/1 var(--font-mono);color:#64748B;border:1px solid #E5E7EB;padding:3px 6px;border-radius:6px">ESC</span>
+        </div>
+        <div style="padding:8px">
+          <div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;padding:10px 10px 6px">COMMANDS</div>
+          <sc-for list="{{ commands }}" as="c" hint-placeholder-count="8">
+            <div onClick="{{ c.go }}" style="display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;cursor:pointer;background:{{ c.bg }}" style-hover="background:#F1F5F9">
+              <i class="icon-{{ c.icon }}" style="font-size:16px;color:{{ c.color }};width:18px;text-align:center"></i>
+              <span style="flex:1;font:500 14px/1 var(--font-body);color:#0F172A">{{ c.label }}</span>
+              <span style="font:500 12px/1 var(--font-body);color:#94A3B8">{{ c.hint }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:16px;padding:10px 18px;border-top:1px solid #F1F5F9;font:500 11px/1 var(--font-body);color:#94A3B8">
+          <span>↑↓ Navigate</span><span>↵ Open</span><span>⌘K Toggle</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;billing&quot;,&quot;options&quot;:[&quot;landing&quot;,&quot;login&quot;,&quot;onboarding&quot;,&quot;dashboard&quot;,&quot;leads&quot;,&quot;detail&quot;,&quot;pipeline&quot;,&quot;inbox&quot;,&quot;tasks&quot;,&quot;calendar&quot;,&quot;automations&quot;,&quot;builder&quot;,&quot;assistant&quot;,&quot;insights&quot;,&quot;analytics&quot;,&quot;integrations&quot;,&quot;team&quot;,&quot;settings&quot;,&quot;billing&quot;],&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { screen: this.props.startScreen ?? 'dashboard', collapsed: false, cmd: false, tab: 'all' };
+  componentDidMount() {
+    this._k = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); this.setState(s => ({ cmd: !s.cmd })); }
+      if (e.key === 'Escape') this.setState({ cmd: false });
+    };
+    window.addEventListener('keydown', this._k);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this._k); }
+  go(s) { this.setState({ screen: s, cmd: false }); }
+
+  renderVals() {
+    const S = this.state.screen, col = this.state.collapsed;
+    const groups = [
+      { label: 'MAIN', items: [['dashboard','Dashboard','layout-dashboard'],['leads','Leads','users',248],['pipeline','Pipeline','kanban'],['inbox','Inbox','inbox',6],['tasks','Tasks','circle-check-big',7],['calendar','Calendar','calendar-days']] },
+      { label: 'AI', items: [['assistant','AI Assistant','sparkles'],['automations','Automations','workflow'],['insights','AI Insights','lightbulb']] },
+      { label: 'ANALYTICS', items: [['analytics','Analytics','chart-column'],['reports','Reports','file-chart-column']] },
+      { label: 'SETTINGS', items: [['integrations','Integrations','blocks'],['team','Team','users-round'],['settings','Settings','settings']] },
+    ];
+    const activeOf = { detail: 'leads', builder: 'automations', billing: 'settings' };
+    const act = activeOf[S] || S;
+    const navGroups = groups.map(g => ({
+      label: g.label, showLabel: !col,
+      items: g.items.map(([id, label, icon, count]) => {
+        const on = act === id, isAi = g.label === 'AI';
+        return { id, label, icon, count, hasCount: !!count && !col, showLabel: !col, go: () => this.go(id),
+          bg: on ? (isAi ? '#F4F3FF' : '#EEF5FD') : 'transparent',
+          fg: on ? (isAi ? '#5B4FD6' : '#0F4C81') : '#475569', weight: on ? 600 : 500 };
+      }),
+    }));
+    const is = { analyticsLike: ['analytics','insights','reports'].includes(S), settingsLike: ['settings','billing'].includes(S) };
+    ['landing','login','onboarding','dashboard','leads','detail','pipeline','inbox','tasks','calendar','assistant','automations','builder','insights','analytics','reports','integrations','team','settings','billing'].forEach(k => is[k] = S === k);
+    const cmds = [
+      ['Search leads…','search','#64748B','leads','Leads'],['Create lead','user-plus','#0F4C81','leads','⌘N'],['Create task','circle-plus','#0F4C81','tasks','T'],
+      ['Open pipeline','kanban','#64748B','pipeline','G P'],['Generate AI reply','sparkles','#5B4FD6','inbox','AI'],['Create automation','workflow','#5B4FD6','builder','AI'],
+      ['Open analytics','chart-column','#64748B','analytics','G A'],['Settings','settings','#64748B','settings','G S'],['View landing page','globe','#64748B','landing',''],
+    ];
+    return {
+      ...this.data(),
+      is, inApp: !['landing','login','onboarding'].includes(S),
+      navGroups, sidebarW: col ? 72 : 248, showLabels: !col,
+      toggleSidebar: () => this.setState(s => ({ collapsed: !s.collapsed })),
+      cmd: this.state.cmd, openCmd: () => this.setState({ cmd: true }), closeCmd: () => this.setState({ cmd: false }), stop: e => e.stopPropagation(),
+      commands: cmds.map(([label, icon, color, to, hint], i) => ({ label, icon, color, hint, bg: i === 0 ? '#F8FAFC' : 'transparent', go: () => this.go(to) })),
+      goAssistant: () => this.go('assistant'),
+      nav: Object.fromEntries(Object.keys(is).map(k => [k, () => this.go(k)])),
+    };
+  }
+
+  data() { return { ...this.dDash(), ...this.dLeads(), ...this.dDetail(), ...this.dPipe(), ...this.dInbox(), ...this.dTasks(), ...this.dAuto(), ...this.dAi(), ...this.dAdmin(), ...this.dMkt() }; }
+  dMkt() {
+    const heroKpis = [['New Leads','42','▲ 18.4%'],['Qualified','18','▲ 12.2%'],['Pipeline','$24,500','▲ 21.5%'],['Conversion','12.4%','▲ 1.3 pts']].map(([l, v, d]) => ({ l, v, d }));
+    const features = [
+      ['01','inbox','#0F4C81','#EEF5FD','Capture every lead','Website forms, Facebook and Google lead ads, Instagram and WhatsApp land in one inbox, instantly.'],
+      ['02','sparkles','#5B4FD6','#F4F3FF','AI qualifies and scores','Each lead gets a 0–100 score with the reasons behind it, so your team knows who is ready to buy.'],
+      ['03','workflow','#15803D','#F0FDF4','Follow-ups run themselves','Automations send the right message on the right channel and create tasks when a human should step in.'],
+      ['04','chart-column','#B45309','#FEF7EA','Learn what converts','See which sources, reps and messages turn into revenue, and where leads are slipping away.'],
+    ].map(([n, icon, c, bg, t, d]) => ({ n, icon, c, bg, t, d }));
+    const loginFeed = [['user-plus','#0F4C81','#EEF5FD','New lead from Facebook','John Smith · ABC Construction','now'],['sparkles','#5B4FD6','#F4F3FF','Scored 87 — High Intent','Specific service requested','2s'],['message-circle','#15803D','#F0FDF4','AI replied on WhatsApp','Response time 41 seconds','41s']].map(([icon, c, bg, t, d, w]) => ({ icon, c, bg, t, d, w }));
+    const obSteps = [['1','Workspace',2],['2','Lead sources',1],['3','Invite team',0]].map(([n, l, st], i) => ({ n: st === 2 ? '✓' : n, l, bg: st ? '#0F4C81' : '#E5E7EB', nfg: st ? '#FFFFFF' : '#64748B', fg: st ? '#0F172A' : '#94A3B8', sep: i < 2 ? 'inline-block' : 'none' }));
+    const obSources = [['Website','globe','#0F4C81','#EEF5FD',1],['Facebook Lead Ads','facebook','#1877F2','#EEF4FE',1],['Google Ads','search','#EA4335','#FEF1F0'],['WhatsApp','message-circle','#16A34A','#F0FDF4'],['Instagram','instagram','#C026D3','#FBF0FD'],['Import CSV','file-spreadsheet','#475569','#F1F5F9']]
+      .map(([n, icon, c, bg, on]) => ({ n, icon, c, bg, bd: on ? '2px solid #1E88E5' : '1px solid #E5E7EB', sh: on ? '0 0 0 4px rgba(30,136,229,.1)' : 'none', ckBg: on ? '#1E88E5' : '#FFFFFF', ckBd: on ? '#1E88E5' : '#CBD5E1', ck: on ? 'inline' : 'none' }));
+    return { heroKpis, features, loginFeed, obSteps, obSources };
+  }
+  dAdmin() {
+    const S = this.state.screen;
+    const I = (name, cat, icon, c, bg, desc, on) => ({ name, cat, icon, c, bg, desc, onShow: on ? 'inline-flex' : 'none', offShow: on ? 'none' : 'inline', btn: on ? 'Manage' : 'Connect', btnBg: on ? '#FFFFFF' : '#0F4C81', btnFg: on ? '#334155' : '#FFFFFF', btnBd: on ? '#E5E7EB' : '#0F4C81' });
+    const intGroups = [
+      { name: 'Lead Sources', items: [I('Facebook Lead Ads','Lead source','facebook','#1877F2','#EEF4FE','Sync lead form submissions in real time, with campaign and ad set attribution.',1),I('Instagram','Lead source','instagram','#C026D3','#FBF0FD','Capture DMs and lead forms from your business profile.',0),I('Website','Lead source','globe','#0F4C81','#EEF5FD','Embed a form or chat widget, or forward from any form builder.',1),I('Google Ads','Lead source','search','#EA4335','#FEF1F0','Import lead form extensions and track cost per qualified lead.',1)] },
+      { name: 'Communication', items: [I('WhatsApp','Messaging','message-circle','#16A34A','#F0FDF4','Two-way WhatsApp Business messaging with templates and auto-replies.',1),I('Gmail','Email','mail','#EA4335','#FEF1F0','Send and log emails from your Google Workspace inbox.',0),I('Outlook','Email','mail','#0F6CBD','#EEF5FD','Send and log emails from Microsoft 365.',0)] },
+      { name: 'Productivity', items: [I('Google Calendar','Scheduling','calendar','#1E88E5','#EEF5FD','Two-way sync for meetings and follow-ups. Booking links included.',1),I('Zoom','Video','video','#2D8CFF','#EEF5FD','Auto-create Zoom links when a meeting is booked.',0),I('Slack','Notifications','slack','#4A154B','#F6EFF6','Post hot-lead alerts and daily digests to any channel.',0)] },
+    ];
+    const team = [['Sarah Mitchell','Owner',64,92,'Active','online'],['Daniel Park','Admin',58,84,'Active','online'],['Maya Johnson','Manager',51,88,'Active','away'],['Leo Martins','Sales Agent',38,46,'Active','offline'],['Aisha Rahman','Sales Agent',37,71,'Active','online'],['Ben Torres','Sales Agent',0,0,'Invited','offline']]
+      .map(([n, role, leads, perf, status, presence]) => ({ n, role, leads, perf, presence, status, email: n.split(' ')[0].toLowerCase() + '@acmedigital.com', perfLabel: perf ? perf + ' / 100' : '—', pc: perf >= 80 ? '#16A34A' : perf >= 60 ? '#1E88E5' : '#D97706', sTone: status === 'Active' ? 'emerald' : 'amber' }));
+    const roles = [['Owner','Full access, billing, and workspace deletion.'],['Admin','Manage team, integrations, and automations.'],['Manager','See all leads and reports; assign leads.'],['Sales Agent','Work assigned leads, inbox, and tasks.']].map(([n, d]) => ({ n, d }));
+    const sn = [['General','sliders-horizontal','settings'],['Workspace','building-2'],['Team','users-round','team'],['Lead Pipeline','kanban'],['Custom Fields','list-plus'],['AI Settings','sparkles'],['Automations','workflow','automations'],['Notifications','bell'],['Integrations','blocks','integrations'],['Billing','credit-card','billing'],['Security','shield-check']];
+    const setNav = sn.map(([l, icon, to]) => { const on = to === S; return { l, icon, go: () => to && this.go(to), bg: on ? '#EEF5FD' : 'transparent', fg: on ? '#0F4C81' : '#475569', w: on ? 600 : 500 }; });
+    const aiToggles = [['Auto-reply to new leads','AI sends a first response within 60 seconds on the lead\'s channel.',1],['Lead scoring','Score every lead 0–100 from intent, fit and engagement.',1],['Suggest next actions','Show recommended actions on lead profiles and the dashboard.',1],['Draft replies only','Never send AI messages without a team member approving them.',0]].map(([l, d, on]) => ({ l, d, bg: on ? '#1E88E5' : '#CBD5E1', k: on ? 19 : 3 }));
+    const usage = [['Seats','5 of 10',50,'#1E88E5'],['Leads this month','1,000 of 2,500',40,'#1E88E5'],['AI credits','8,420 of 10,000',84,'#D97706']].map(([l, v, p, c]) => ({ l, v, p, c }));
+    const P = (n, price, tag, f, cur) => ({ n, price, tag, f, bd: cur ? '2px solid #1E88E5' : '1px solid #E5E7EB', btn: cur ? 'Current plan' : 'Switch', btnBg: cur ? '#EEF5FD' : '#FFFFFF', btnFg: cur ? '#0F4C81' : '#0F172A', btnBd: cur ? '#C4DDF7' : '#E5E7EB' });
+    const plans = [P('Starter','$49','',['3 seats','500 leads / month','Inbox & pipeline','Basic automations']),P('Growth','$149','CURRENT',['10 seats','2,500 leads / month','AI scoring & replies','Unlimited automations'],1),P('Scale','$399','',['Unlimited seats','Unlimited leads','Advanced analytics','SSO & audit log'])];
+    const invoices = [['Oct 1, 2026','$149.00'],['Sep 1, 2026','$149.00'],['Aug 1, 2026','$149.00']].map(([d, a]) => ({ d, a }));
+    return { intGroups, team, roles, setNav, aiToggles, usage, plans, invoices, tzs: ['(GMT−5) Central Time','(GMT−8) Pacific Time','(GMT+0) London'], curr: ['USD — US Dollar','EUR — Euro','GBP — British Pound'] };
+  }
+  dAi() {
+    const S = this.state.screen;
+    const chats = ['Why are my leads not converting?','Which reps respond fastest?','Forecast for October','Best time to contact dental leads','Summarize this week'].map((t, i) => ({ t, bg: i ? 'transparent' : '#F4F3FF', fg: i ? '#475569' : '#5B4FD6' }));
+    const aiBars = [['Followed up < 24h',36,'#16A34A'],['Followed up 1–3 days',41,'#D97706'],['No follow-up',23,'#DC2626']].map(([l, v, c]) => ({ l, v, c }));
+    const perf = [['Total Leads','1,000','+14.2%'],['Qualified Leads','310','+9.8%'],['Meetings','140','+4.1%'],['Proposals','65','+12.0%'],['Won','24','+20.0%'],['Lost','31','−6.0%',1]].map(([l, v, d, neg]) => ({ l, v, d, dc: neg ? '#15803D' : '#15803D' }));
+    const srcPerf = [['Website','globe',312,'41%',9],['Google','search',264,'36%',7],['WhatsApp','message-circle',148,'29%',4],['Facebook','facebook',121,'22%',2],['Instagram','instagram',59,'19%',1]].map(([n, icon, leads, q, won]) => ({ n, icon, leads, q, won, qc: parseInt(q) >= 30 ? '#15803D' : '#64748B' }));
+    const reps = [['Sarah Mitchell',96,'14m',31,9,'$41,800'],['Daniel Park',88,'22m',27,7,'$33,500'],['Maya Johnson',74,'9m',24,6,'$27,900'],['Leo Martins',52,'1h 40m',11,2,'$8,200']].map(([n, leads, rt, m, w, rev]) => ({ n, leads, rt, m, w, rev, rc: rt.includes('h') ? '#DC2626' : '#334155' }));
+    return { chats, aiBars, perf, srcPerf, reps, prompts: ['Which leads should I call today?','Compare Google vs Facebook','Draft a weekly report'],
+      rangeTabs: ['7D','30D','90D','12M'], anTitle: S === 'insights' ? 'AI Insights' : S === 'reports' ? 'Reports' : 'Analytics' };
+  }
+  dAuto() {
+    const K = { WHEN: ['#0F4C81','#E3EFFB'], WAIT: ['#64748B','#F1F5F9'], IF: ['#B45309','#FEF3C7'], THEN: ['#15803D','#DCFCE7'], AI: ['#5B4FD6','#ECEBFD'] };
+    const steps = [['WHEN','Lead becomes Qualified','user-check','Any source'],['WAIT','24 hours','hourglass','Business hours only'],['IF','No response','git-branch','Lead hasn\'t replied on any channel'],['THEN','Send WhatsApp Message','message-circle','Template: Qualified check-in'],['WAIT','2 days','hourglass',''],['THEN','Create Sales Task','clipboard-check','Assign to lead owner · High priority']];
+    const flow = steps.map(([kind, label, icon, sub], i) => ({ kind, label, icon, sub, c: K[kind][0], bg: K[kind][1], lineShow: i ? 'block' : 'none' }));
+    const builderFlow = flow.map((n, i) => ({ ...n, lineShow: i ? 'flex' : 'none', bd: i === 3 ? '2px solid #1E88E5' : '1px solid #E5E7EB', shadow: i === 3 ? '0 0 0 4px rgba(30,136,229,.12),0 8px 20px rgba(15,23,42,.06)' : '0 1px 2px rgba(15,23,42,.05)' }));
+    const st = (arr) => arr.map(([k, icon]) => ({ c: K[k][0], bg: K[k][1], icon }));
+    const autos = [
+      ['Instant AI reply to new leads','Reply within 60 seconds on the lead\'s channel, then score and assign.',[['WHEN','user-plus'],['AI','sparkles'],['THEN','user-round-check']],'1,042 runs','Avg reply 41s',1],
+      ['Round-robin assignment','Distribute website and Google Ads leads evenly across sales agents.',[['WHEN','globe'],['THEN','shuffle']],'486 runs','6 agents',1],
+      ['Re-engage cold leads','After 14 days of silence, send a check-in email with a case study.',[['WHEN','snowflake'],['WAIT','hourglass'],['THEN','mail']],'128 runs','9% revived',1],
+      ['Meeting reminder','Send a WhatsApp reminder 2 hours before any booked meeting.',[['WHEN','calendar'],['THEN','message-circle']],'94 runs','−31% no-shows',1],
+      ['Hot lead alert','Notify the owner in Slack when a lead\'s score crosses 85.',[['WHEN','flame'],['THEN','bell']],'57 runs','Paused',0],
+    ];
+    const autosV = autos.map(([name, desc, s, runs, stat, on]) => ({ name, desc, steps: st(s), runs, stat, tg: on ? '#16A34A' : '#CBD5E1', knob: on ? 17 : 3, statFg: on ? '#15803D' : '#94A3B8' }));
+    const pi = (k, arr) => arr.map(([label, icon]) => ({ label, icon, c: K[k][0], bg: K[k][1] }));
+    const palette = [
+      { name: 'TRIGGERS', items: pi('WHEN', [['New Lead','user-plus'],['Lead Qualified','user-check'],['Stage Changed','arrow-right-left'],['Form Submitted','file-input'],['No Response','message-circle-off']]) },
+      { name: 'ACTIONS', items: [...pi('THEN', [['Send Email','mail'],['Send WhatsApp','message-circle'],['Assign Lead','user-round-check'],['Create Task','clipboard-check'],['Change Stage','arrow-right-left'],['Add Tag','tag']]), ...pi('AI', [['Generate AI Reply','sparkles']]), ...pi('THEN', [['Notify Team','bell']])] },
+      { name: 'LOGIC', items: [...pi('WAIT', [['Wait','hourglass']]), ...pi('IF', [['If / else','git-branch']])] },
+    ];
+    return { flow, builderFlow, autos: autosV, palette, senders: ['Acme Digital · +1 512 555 0100','Sarah Mitchell · +1 512 555 0148'] };
+  }
+  dTasks() {
+    const mk = (arr) => arr.map(([title, lead, who, priority, due, done, rem]) => ({ title, lead, who, priority, due,
+      pTone: { High: 'red', Medium: 'amber', Low: 'slate' }[priority], dueFg: due === 'Overdue' ? '#DC2626' : '#334155',
+      ckBg: done ? '#16A34A' : '#FFFFFF', ckBd: done ? '#16A34A' : '#CBD5E1', ckShow: done ? 'inline' : 'none', fg: done ? '#94A3B8' : '#0F172A', strike: done ? 'line-through' : 'none', remShow: rem ? 'inline-flex' : 'none' }));
+    const taskGroups = [
+      ['Today', [['Follow up with Priya on Instagram ads','Priya Nair · Lumen Yoga Studio','Daniel Park','Medium','Overdue'],['Call John','John Smith · ABC Construction','Sarah Mitchell','High','10:00 AM',0,1],['Send proposal to Ahmed','Ahmed Khan · Brightsmile Dental','Sarah Mitchell','High','11:30 AM',0,1],['Follow up with Sarah','Sarah Lee · Northwind Realty','Maya Johnson','Medium','2:00 PM'],['Confirm kickoff date','Chloe Dupont · Dupont Florals','Maya Johnson','Low','9:00 AM',1]]],
+      ['Tomorrow', [['Discovery call prep','Emily Carter · Carter & Co. Law','Daniel Park','High','9:30 AM',0,1],['Send case studies','Grace Okafor · Okafor Logistics','Maya Johnson','Low','1:00 PM']]],
+      ['This Week', [['Revise proposal v2','Lina Haddad · Haddad Interiors','Sarah Mitchell','Medium','Thu'],['Contract review','Oliver Grant · Grant Roofing','Daniel Park','High','Fri']]],
+    ].map(([name, items]) => ({ name, count: items.length, items: mk(items) }));
+    const C = { Meeting: ['#5B4FD6','#F4F3FF','video'], 'Follow-up': ['#1E88E5','#EEF5FD','repeat'], Task: ['#D97706','#FEF7EA','circle-check'], Call: ['#16A34A','#F0FDF4','phone'] };
+    const calLegend = Object.keys(C).map(l => ({ l: l + 's', c: C[l][0] }));
+    const ev = [
+      [0,'Call John Smith','Call',10,0.5],[0,'Proposal: Brightsmile','Task',11.5,0.75],[0,'Follow up Sarah Lee','Follow-up',14,0.5],
+      [1,'Discovery — Carter & Co.','Meeting',9.5,1],[1,'Team pipeline review','Meeting',13,1],[1,'Okafor case studies','Task',15,0.5],
+      [2,'Grant Roofing negotiation','Call',11,0.75],[2,'Demo — Fischer Dental','Meeting',14,1.25],
+      [3,'Haddad proposal v2','Task',10,1],[3,'Re-engage cold leads','Follow-up',15.5,0.5],
+      [4,'Grant contract review','Meeting',9,1],[4,'Weekly forecast','Task',16,0.5],
+    ];
+    const fmt = h => { const hh = Math.floor(h), m = Math.round((h - hh) * 60); return `${((hh + 11) % 12) + 1}:${String(m).padStart(2, '0')}`; };
+    const calCols = [0,1,2,3,4].map(d => ({ events: ev.filter(e => e[0] === d).map(([, t, k, s, dur]) => ({ t, time: `${fmt(s)}–${fmt(s + dur)}`, top: (s - 8) * 64 + 2, h: dur * 64 - 4, c: C[k][0], bg: C[k][1], icon: C[k][2] })) }));
+    const calDays = [['Mon',5],['Tue',6],['Wed',7],['Thu',8],['Fri',9]].map(([dow, n], i) => ({ dow, n, bg: i === 0 ? '#0F4C81' : 'transparent', fg: i === 0 ? '#FFFFFF' : '#0F172A' }));
+    const hours = ['8 AM','9 AM','10 AM','11 AM','12 PM','1 PM','2 PM','3 PM','4 PM'];
+    return { taskGroups, taskTabs: ['Mine','Team','Completed'], calTabs: ['Day','Week','Month'], calLegend, calCols, calDays, hours };
+  }
+  dInbox() {
+    const chIcon = { WhatsApp: ['message-circle','#16A34A'], Instagram: ['instagram','#C026D3'], Facebook: ['facebook','#1E88E5'], Email: ['mail','#0F4C81'], Website: ['globe','#475569'] };
+    const channels = [['All'],['WhatsApp'],['Instagram'],['Facebook'],['Email'],['Website']].map(([label], i) => ({ label, icon: (chIcon[label] || [])[0] || 'inbox', iconShow: i ? 'inline' : 'none', bg: i ? '#FFFFFF' : '#0F4C81', fg: i ? '#475569' : '#FFFFFF', bd: i ? '#E5E7EB' : '#0F4C81' }));
+    const convos = [
+      ['Ahmed Khan','WhatsApp','Can you send the pricing breakdown today?','2m',1,1],
+      ['Emily Carter','Email','Re: Discovery call — Thursday works for us','18m',1],
+      ['Priya Nair','Instagram','Do you also handle Instagram ads?','1h',1],
+      ['Marco Rossi','WhatsApp','Hi, saw your ad. How much for a site?','1h'],
+      ['Website visitor','Website','Looking for an SEO audit for 3 locations','3h'],
+      ['Grace Okafor','Email','Thanks, sharing with our ops team','5h'],
+      ['Tom Becker','Facebook','Is the $1,500 package still available?','1d'],
+    ].map(([name, ch, preview, time, unread, active]) => ({ name, preview, time, icon: chIcon[ch][0], iconColor: chIcon[ch][1], weight: unread ? 700 : 600, prevColor: unread ? '#334155' : '#64748B', dot: unread ? 'visible' : 'hidden', bg: active ? '#F2F8FE' : '#FFFFFF', line: active ? '#1E88E5' : 'transparent' }));
+    const thread = [
+      ['in','Hi! We need a new website for Brightsmile Dental. Online booking is a must.','9:41 AM'],
+      ['ai','Thanks Ahmed! Online booking is something we build often. How many pages are you thinking, and do you have a booking system already?','9:41 AM · AI auto-reply'],
+      ['in','Around 6 pages. We use Dentrix for scheduling.','9:58 AM'],
+      ['out','Perfect — we\'ve integrated Dentrix before. I\'ll put a proposal together for you today.','10:12 AM · Sarah'],
+      ['in','Can you send the pricing breakdown today?','10:40 AM'],
+    ].map(([k, text, meta]) => ({ text, meta, align: k === 'in' ? 'flex-start' : 'flex-end', aiShow: k === 'ai' ? 'inline' : 'none',
+      bg: k === 'in' ? '#FFFFFF' : k === 'ai' ? '#F4F3FF' : '#0F4C81', fg: k === 'out' ? '#FFFFFF' : '#0F172A', bd: k === 'in' ? '#E5E7EB' : k === 'ai' ? '#DEDBFB' : '#0F4C81',
+      radius: k === 'in' ? '4px 16px 16px 16px' : '16px 4px 16px 16px' }));
+    const inboxInfo = [['Deal value','$8,500'],['Source','Website'],['Owner','Sarah Mitchell'],['First contact','Sep 28']].map(([k, v]) => ({ k, v }));
+    const inboxActivity = [['Opened proposal email','1h'],['Stage → Proposal','Yesterday'],['Score 64 → 78','Yesterday']].map(([t, w]) => ({ t, w }));
+    return { channels, convos, thread, inboxInfo, inboxActivity };
+  }
+  dPipe() {
+    const C = [
+      ['NEW','#94A3B8',[['Marco Rossi','Rossi Auto Body',3200,41,'Daniel Park','12m ago','Today'],['Tom Becker','Becker Bakery',1800,28,'Maya Johnson','6h ago','Thu'],['Hana Sato','Sato Ceramics',2400,55,'Sarah Mitchell','1d ago','Fri']]],
+      ['CONTACTED','#1E88E5',[['Sarah Lee','Northwind Realty',6500,64,'Maya Johnson','5h ago','Today'],['Priya Nair','Lumen Yoga Studio',2900,52,'Daniel Park','1d ago','Overdue']]],
+      ['QUALIFIED','#0F4C81',[['John Smith','ABC Construction',9800,87,'Sarah Mitchell','2h ago','Tomorrow',1],['Grace Okafor','Okafor Logistics',7400,73,'Maya Johnson','3h ago','Fri']]],
+      ['MEETING','#5B4FD6',[['Emily Carter','Carter & Co. Law',12000,91,'Daniel Park','1h ago','Today'],['Noah Fischer','Fischer Dental',5600,69,'Sarah Mitchell','2d ago','Mon']]],
+      ['PROPOSAL','#D97706',[['Ahmed Khan','Brightsmile Dental',8500,78,'Sarah Mitchell','35m ago','Today'],['Lina Haddad','Haddad Interiors',11200,82,'Sarah Mitchell','1d ago','Thu']]],
+      ['NEGOTIATION','#0E7490',[['Oliver Grant','Grant Roofing',14500,84,'Daniel Park','4h ago','Wed']]],
+      ['WON','#16A34A',[['Chloe Dupont','Dupont Florals',4200,90,'Maya Johnson','Yesterday','—'],['Ryan Cole','Cole HVAC',9100,88,'Daniel Park','2d ago','—']]],
+      ['LOST','#DC2626',[['Kevin Walsh','Walsh Fitness',3000,36,'Daniel Park','4d ago','—']]],
+    ];
+    const columns = C.map(([name, color, cards]) => ({
+      name, color, count: cards.length, total: '$' + cards.reduce((a, c) => a + c[2], 0).toLocaleString(),
+      cards: cards.map(([n, company, v, score, rep, last, next, drag]) => {
+        const [, tone] = this.temp(score);
+        const m = { violet: ['#5B4FD6','#F4F3FF'], red: ['#DC2626','#FEF2F2'], amber: ['#B45309','#FEF7EA'], blue: ['#2563EB','#EFF4FE'] }[tone];
+        return { name: n, company, value: '$' + v.toLocaleString(), score, rep, last, next, scoreFg: m[0], scoreBg: m[1],
+          nextFg: next === 'Overdue' ? '#DC2626' : next === 'Today' ? '#0F4C81' : '#64748B',
+          bd: drag ? '#93C5F3' : '#E5E7EB', shadow: drag ? '0 14px 30px rgba(15,76,129,.16)' : '0 1px 2px rgba(15,23,42,.04)', tf: drag ? 'rotate(-1.5deg)' : 'none' };
+      }),
+    }));
+    return { columns, pipeTabs: ['Board','List'] };
+  }
+  regenerate() { this.setState({ replyLoading: true }); clearTimeout(this._rt); this._rt = setTimeout(() => this.setState({ replyLoading: false }), 1100); }
+  dDetail() {
+    const order = ['New','Contacted','Qualified','Meeting','Proposal','Negotiation','Won'], cur = 2;
+    const stages = order.map((name, i) => ({ name, bg: i < cur ? '#EEF5FD' : i === cur ? '#0F4C81' : '#FFFFFF', fg: i < cur ? '#0F4C81' : i === cur ? '#FFFFFF' : '#94A3B8' }));
+    const leadInfo = [['Name','John Smith'],['Company','ABC Construction'],['Email','john@abcconstruction.com','#1E88E5'],['Phone','+1 (512) 555-0148'],['Source','Facebook Lead Ads'],['Campaign','Fall Website Promo'],['Budget','$8,000 – $12,000'],['Timeline','Within 30 days'],['Industry','Construction'],['Sales rep','Sarah Mitchell']].map(([k, v, c]) => ({ k, v, c: c || '#0F172A' }));
+    const reasons = ['Clear business requirement','High commercial intent','Specific service requested','Engaged with previous message'];
+    const ch = { whatsapp: ['message-circle','#DCFCE7','#15803D'], ai: ['sparkles','#ECEBFD','#5B4FD6'], rep: ['user','#E3EFFB','#0F4C81'], sched: ['calendar-clock','#FEF3C7','#B45309'], web: ['globe','#F1F5F9','#475569'] };
+    const timeline = [
+      ['web','Lead captured','Today — 10:31 AM · Facebook Lead Ads','Form submitted: “Website redesign for multiple brands, budget $8–12k.”',0],
+      ['whatsapp','John','Today — 10:42 AM · WhatsApp','Hi, I need a website for my dental clinic.',1,'#F8FAFC','#E5E7EB'],
+      ['ai','AI','Today — 10:42 AM · Auto-reply','Thanks John! We\'d be happy to help. Could you share a bit about your clinic and what you need the site to do?',1,'#F7F6FF','#ECEBFD'],
+      ['rep','Sarah','Today — 11:15 AM · WhatsApp','Would you like to schedule a quick call?',1,'#EEF5FD','#D6E7FA'],
+      ['sched','Follow-up scheduled','Tomorrow · 10:00 AM','Assigned to Sarah Mitchell',0],
+    ].map(([k, who, meta, text, msg, msgBg, msgBd]) => ({ icon: ch[k][0], dotBg: ch[k][1], dotFg: ch[k][2], who, meta, text, showMsg: msg ? 'block' : 'none', showNote: msg ? 'none' : 'block', msgBg, msgBd }));
+    const tones = ['Regenerate','Shorter','More Professional','More Friendly'].map(label => ({ label, go: () => this.regenerate() }));
+    const L = !!this.state.replyLoading;
+    return { stages, leadInfo, reasons, timeline, tones, replyLoading: L, replyReady: !L, regen: () => this.regenerate() };
+  }
+  temp(score) { return score >= 85 ? ['High Intent','violet'] : score >= 70 ? ['Hot','red'] : score >= 45 ? ['Warm','amber'] : ['Cold','blue']; }
+  stageTone(s) { return { New:'slate', Contacted:'blue', Qualified:'navy', Meeting:'violet', Proposal:'amber', Won:'emerald', Lost:'red' }[s] || 'slate'; }
+  srcIcon(s) { return { Website:'globe', Facebook:'facebook', Instagram:'instagram', 'Google Ads':'search', WhatsApp:'message-circle', Referral:'handshake' }[s]; }
+  dLeads() {
+    const raw = [
+      ['John Smith','ABC Construction','Facebook',87,'Qualified','Sarah Mitchell','2h ago','Tomorrow 10:00 AM'],
+      ['Ahmed Khan','Brightsmile Dental','Website',78,'Proposal','Sarah Mitchell','35m ago','Today 11:30 AM'],
+      ['Emily Carter','Carter & Co. Law','Google Ads',91,'Meeting','Daniel Park','1h ago','Today 3:00 PM'],
+      ['Sarah Lee','Northwind Realty','Referral',64,'Contacted','Maya Johnson','5h ago','Today 2:00 PM'],
+      ['Priya Nair','Lumen Yoga Studio','Instagram',52,'Contacted','Daniel Park','1d ago','Overdue'],
+      ['Marco Rossi','Rossi Auto Body','WhatsApp',41,'New','Unassigned','12m ago','Today 4:30 PM'],
+      ['Grace Okafor','Okafor Logistics','Website',73,'Qualified','Maya Johnson','3h ago','Fri 9:00 AM'],
+      ['Tom Becker','Becker Bakery','Facebook',28,'New','Unassigned','6h ago','—'],
+      ['Lina Haddad','Haddad Interiors','Google Ads',82,'Proposal','Sarah Mitchell','1d ago','Thu 1:00 PM'],
+      ['Kevin Walsh','Walsh Fitness','Instagram',36,'Lost','Daniel Park','4d ago','—'],
+    ];
+    const leads = raw.map(([name, company, source, score, stage, rep, last, next], i) => {
+      const [t, tone] = this.temp(score), sel = i === 1 || i === 2;
+      return { name, company, source, score, stage, rep, last, next, temp: t, tempTone: tone, stageTone: this.stageTone(stage), srcIcon: this.srcIcon(source),
+        email: name.split(' ')[0].toLowerCase() + '@' + company.toLowerCase().replace(/[^a-z]/g, '').slice(0, 12) + '.com',
+        repFirst: rep.split(' ')[0], nextColor: next === 'Overdue' ? '#DC2626' : next.startsWith('Today') ? '#0F4C81' : '#334155',
+        rowBg: sel ? '#F7FAFE' : '#FFFFFF', ckBg: sel ? '#1E88E5' : '#FFFFFF', ckBd: sel ? '#1E88E5' : '#CBD5E1', ckShow: sel ? 'inline' : 'none' };
+    });
+    const leadTabs = [['All leads',248,1],['My leads',64],['High intent',23],['Unassigned',11],['Needs follow-up',7]].map(([label, n, on]) => ({ label, n, fg: on ? '#0F172A' : '#64748B', line: on ? '#0F4C81' : 'transparent' }));
+    const filters = [['Status','circle-dot'],['Source','radio-tower'],['Lead Score: 70+','gauge',1],['Assigned To','user'],['Date','calendar'],['Tags','tag']].map(([label, icon, on]) => ({ label, icon, bd: on ? '#93C5F3' : '#CBD5E1', bg: on ? '#EEF5FD' : '#FFFFFF', fg: on ? '#0F4C81' : '#475569' }));
+    return { leads, leadTabs, filters };
+  }
+  dDash() {
+    const fn = [['New',1000],['Contacted',620],['Qualified',310],['Meeting',140],['Proposal',65],['Won',24]];
+    const cols = ['#0F4C81','#165C99','#1E6FB8','#1E88E5','#4FA0EA','#16A34A'];
+    const funnel = fn.map(([name, n], i) => {
+      const prev = i ? fn[i-1][1] : null, pct = prev ? Math.round(n / prev * 100) : 100;
+      return { name, n: n.toLocaleString(), w: Math.max(8, n / 10), color: cols[i],
+        drop: prev ? `${pct}% from ${fn[i-1][0].toLowerCase()}` : '100%', dropColor: name === 'Meeting' ? '#DC2626' : '#64748B' };
+    });
+    const src = [['Website','globe',312,'18.2%'],['Google Ads','search',264,'15.6%'],['Referral','handshake',96,'21.4%'],['WhatsApp','message-circle',148,'11.8%'],['Facebook','facebook',121,'7.4%'],['Instagram','instagram',59,'6.1%']];
+    const sources = src.map(([name, icon, n, conv]) => ({ name, icon, n, conv, w: n / 3.12, cColor: parseFloat(conv) >= 12 ? '#15803D' : '#64748B' }));
+    const followups = [
+      ['John Smith','ABC Construction','Proposal follow-up',87,'10:00 AM'],['Ahmed Khan','Brightsmile Dental','Send pricing',78,'11:30 AM'],
+      ['Sarah Lee','Northwind Realty','Discovery call',64,'2:00 PM'],['Priya Nair','Lumen Yoga Studio','Check in',52,'Overdue'],['Marco Rossi','Rossi Auto Body','Intro message',41,'4:30 PM'],
+    ].map(([name, company, what, score, time]) => ({ name, company, what, score, time, timeColor: time === 'Overdue' ? '#DC2626' : '#334155' }));
+    const insights = [
+      { tag: 'NEEDS ATTENTION', tagColor: '#B45309', text: "7 qualified leads haven't received a follow-up in the last 24 hours.", cta: 'Review Leads →', go: () => this.go('leads'), border: '1px solid #ECEBFD' },
+      { tag: 'OPPORTUNITY', tagColor: '#5B4FD6', text: 'Google Ads leads are converting 2.1× better than Facebook leads this month.', cta: 'View Analytics →', go: () => this.go('analytics'), border: '0' },
+    ];
+    return { funnel, sources, followups, insights };
+  }
+}
+</script>
+</body>
+</html>

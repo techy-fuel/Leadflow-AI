@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>LeadFlow AI — Design System, States &amp; Mobile</title>
+<meta name="design_doc_mode" content="canvas">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/colors.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/typography.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/styles.css">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.460.0/font/lucide.css">
+<script src="_ds/autopilot-crm-design-system-9860d1a2-10be-4d49-9d61-0aa640037b3b/_ds_bundle.js"></script>
+<style>
+:root{--navy-950:#0B2E4F;--navy-900:#0F4C81;--navy-800:#0D4170;--navy-700:#13589A;--navy-600:#1A6CB5;--navy-500:#1E88E5;--navy-400:#5AA7EC;--navy-300:#93C5F3;--navy-200:#C4DDF7;--navy-100:#E3EFFB;--navy-50:#F2F8FE;
+--emerald-800:#166534;--emerald-700:#15803D;--emerald-600:#16A34A;--emerald-500:#22C55E;--emerald-200:#BBF7D0;--emerald-100:#DCFCE7;--emerald-50:#F0FDF4;
+--violet-600:#5B4FD6;--violet-100:#ECEBFD;--text-strong:#0F172A;--text-muted:#64748B;--border-soft:#E5E7EB;--bg-app:#F8FAFC;
+--gradient-emerald:linear-gradient(180deg,#2591EA 0%,#1E88E5 100%);--focus-ring:rgba(30,136,229,.3);}
+html,body{margin:0;background:#EEF1F5;font-family:var(--font-body);color:#0F172A;-webkit-font-smoothing:antialiased}
+a{color:#1E88E5;text-decoration:none}a:hover{color:#0F4C81}
+*{box-sizing:border-box}
+@keyframes lfPulse{0%,100%{opacity:.5}50%{opacity:1}}
+</style>
+</helmet>
+
+<div style="padding:64px;display:flex;flex-direction:column;gap:72px;width:max-content">
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <span style="font:700 12px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6">LEADFLOW AI</span>
+    <h1 style="margin:0;font:800 44px/1.1 var(--font-display);letter-spacing:-.03em;color:#0F172A">Design system, states &amp; mobile</h1>
+    <p style="margin:0;font:500 16px/1.5 var(--font-body);color:#64748B">Companion board to <a href="LeadFlow AI.dc.html">LeadFlow AI.dc.html</a>. Built on the AutoPilot component library with the LeadFlow palette.</p>
+  </div>
+
+  <section id="foundations" style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font:800 26px/1 var(--font-display);letter-spacing:-.02em">Foundations</h2>
+    <div style="display:flex;gap:24px;align-items:flex-start">
+      <div style="width:720px;background:#FFFFFF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:18px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">COLOR</span>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:12px">
+          <sc-for list="{{ swatches }}" as="s" hint-placeholder-count="10">
+            <div style="display:flex;flex-direction:column;gap:8px"><div style="height:64px;border-radius:12px;background:{{ s.hex }};border:1px solid #E5E7EB"></div><div style="font:700 12.5px/1.2 var(--font-display);color:#0F172A">{{ s.n }}</div><div style="font:500 11.5px/1.3 var(--font-mono);color:#64748B">{{ s.hex }}</div><div style="font:500 11.5px/1.35 var(--font-body);color:#94A3B8">{{ s.use }}</div></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="width:520px;background:#FFFFFF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">TYPE · PLUS JAKARTA SANS</span>
+        <sc-for list="{{ typeScale }}" as="t" hint-placeholder-count="6">
+          <div style="display:flex;align-items:baseline;gap:16px;border-bottom:1px solid #F1F5F9;padding-bottom:12px"><span style="width:90px;font:500 11.5px/1 var(--font-mono);color:#94A3B8;flex-shrink:0">{{ t.k }}</span><span style="font:{{ t.f }};letter-spacing:{{ t.ls }};color:#0F172A">{{ t.s }}</span></div>
+        </sc-for>
+      </div>
+      <div style="width:360px;background:#FFFFFF;border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:16px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">RADIUS · SHADOW · SPACING</span>
+        <div style="display:flex;gap:12px;align-items:flex-end">
+          <sc-for list="{{ radii }}" as="r" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:52px;height:52px;background:#EEF5FD;border:1.5px solid #93C5F3;border-radius:{{ r.v }}"></div><span style="font:500 11px/1 var(--font-mono);color:#64748B">{{ r.k }}</span></div></sc-for>
+        </div>
+        <div style="display:flex;gap:14px;padding:8px 0">
+          <div style="flex:1;height:56px;border-radius:14px;background:#FFFFFF;border:1px solid #E5E7EB;box-shadow:var(--shadow-card);font:500 11px/56px var(--font-mono);text-align:center;color:#64748B">card</div>
+          <div style="flex:1;height:56px;border-radius:14px;background:#FFFFFF;box-shadow:var(--shadow-pop);font:500 11px/56px var(--font-mono);text-align:center;color:#64748B">popover</div>
+        </div>
+        <div style="display:flex;gap:6px;align-items:flex-end">
+          <sc-for list="{{ spaces }}" as="sp" hint-placeholder-count="7"><div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div style="width:{{ sp }}px;height:{{ sp }}px;background:#1E88E5;border-radius:3px;opacity:.8"></div><span style="font:500 10px/1 var(--font-mono);color:#94A3B8">{{ sp }}</span></div></sc-for>
+        </div>
+        <p style="margin:0;font:500 12.5px/1.5 var(--font-body);color:#64748B">4px base. Cards 18px radius, buttons 14px, chips full. Shadows are soft and blue-tinted; violet is reserved for AI surfaces.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="components" style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font:800 26px/1 var(--font-display);letter-spacing:-.02em">Components</h2>
+    <div style="display:grid;grid-template-columns:repeat(4,400px);gap:24px">
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">BUTTONS</span>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" hint-size="100px,42px">Primary</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="accent" hint-size="100px,42px">Accent</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="secondary" hint-size="110px,42px">Secondary</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" hint-size="80px,42px">Ghost</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="danger" hint-size="90px,42px">Delete</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="primary" disabled="{{ true }}" hint-size="100px,42px">Disabled</x-import>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" size="sm" hint-size="80px,34px">Small</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" size="md" hint-size="90px,42px">Medium</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" size="lg" hint-size="90px,50px">Large</x-import>
+        </div>
+        <span style="height:36px;width:max-content;padding:0 14px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;gap:6px;font:600 13px/1 var(--font-display)"><i class="icon-sparkles" style="font-size:14px"></i>AI action</span>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">INPUTS · SELECT · SEARCH</span>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Email" placeholder="john@abcconstruction.com" hint-size="100%,64px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Phone" default-value="+1 512" error="Enter a full phone number" hint-size="100%,84px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Select" label="Stage" options="{{ stageOpts }}" hint-size="100%,64px"></x-import>
+        <div style="height:38px;border:1px solid #E5E7EB;border-radius:11px;background:#F8FAFC;display:flex;align-items:center;gap:10px;padding:0 12px;color:#94A3B8"><i class="icon-search" style="font-size:15px"></i><span style="flex:1;font:500 13px/1 var(--font-body)">Search…</span><span style="font:600 11px/1 var(--font-mono);color:#64748B;border:1px solid #E5E7EB;background:#FFFFFF;padding:3px 6px;border-radius:6px">⌘K</span></div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">BADGES · LEAD SCORE · AVATARS</span>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="blue" hint-size="50px,22px">Cold</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="amber" hint-size="50px,22px">Warm</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="red" hint-size="50px,22px">Hot</x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="violet" hint-size="80px,22px">High Intent</x-import>
+        </div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <sc-for list="{{ stageBadges }}" as="b" hint-placeholder-count="7"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ b.t }}" dot="{{ true }}" size="sm" hint-size="70px,20px">{{ b.l }}</x-import></sc-for>
+        </div>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.LeadScore" score="{{ 87 }}" hint-size="160px,24px"></x-import>
+        <div style="display:flex;gap:8px;align-items:center">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Sarah Mitchell" size="{{ 40 }}" status="online" hint-size="40px,40px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Daniel Park" size="{{ 32 }}" status="away" hint-size="32px,32px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Maya Johnson" size="{{ 24 }}" hint-size="24px,24px"></x-import>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">TABS · DROPDOWN · TOOLTIP</span>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" tabs="{{ tabsU }}" value="Overview" hint-size="100%,32px"></x-import>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Tabs" variant="pill" tabs="{{ tabsP }}" value="Week" hint-size="180px,40px"></x-import>
+        <div style="display:flex;gap:16px;align-items:flex-start">
+          <div style="width:200px;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;box-shadow:var(--shadow-pop);padding:6px">
+            <sc-for list="{{ menu }}" as="m" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:9px;font:500 13px/1 var(--font-body);color:{{ m.c }};background:{{ m.bg }}"><i class="icon-{{ m.i }}" style="font-size:14px"></i>{{ m.l }}</div></sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:6px">
+            <span style="background:#0F172A;color:#FFFFFF;font:500 12px/1.3 var(--font-body);padding:6px 10px;border-radius:8px">Score updated 2m ago</span>
+            <span style="width:30px;height:30px;border-radius:9px;border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center;color:#64748B"><i class="icon-info" style="font-size:14px"></i></span>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">STAT CARD</span>
+        <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.StatCard" label="Pipeline Value" value="$24,500" delta="21.5%" trend="up" hint-size="100%,124px"></x-import>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">AI INSIGHT</span>
+        <div style="background:linear-gradient(180deg,#F7F6FF 0%,#FFFFFF 100%);border:1px solid #DEDBFB;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px">
+          <span style="display:flex;align-items:center;gap:6px;font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6"><i class="icon-sparkles" style="font-size:12px"></i>AI INSIGHT</span>
+          <span style="font:500 14px/1.5 var(--font-body);color:#0F172A">Google Ads leads are converting 2.1× better than Facebook leads this month.</span>
+          <span style="font:600 13px/1 var(--font-display);color:#5B4FD6">View Analytics →</span>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">KANBAN CARD · DRAGGING</span>
+        <div style="display:flex;gap:12px">
+          <div style="flex:1;background:#FFFFFF;border:1px solid #E5E7EB;border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:8px"><span style="font:700 13px/1.2 var(--font-display)">John Smith</span><span style="font:500 11.5px/1 var(--font-body);color:#64748B">ABC Construction</span><span style="font:800 15px/1 var(--font-display)">$9,800</span></div>
+          <div style="flex:1;background:#FFFFFF;border:1px solid #93C5F3;border-radius:13px;padding:12px;display:flex;flex-direction:column;gap:8px;transform:rotate(-2deg);box-shadow:0 14px 30px rgba(15,76,129,.16)"><span style="font:700 13px/1.2 var(--font-display)">Emily Carter</span><span style="font:500 11.5px/1 var(--font-body);color:#64748B">Carter &amp; Co. Law</span><span style="font:800 15px/1 var(--font-display)">$12,000</span></div>
+        </div>
+        <div style="height:56px;border:1.5px dashed #93C5F3;background:#F2F8FE;border-radius:13px;display:flex;align-items:center;justify-content:center;font:600 12px/1 var(--font-display);color:#1E88E5">Drop to move to Meeting</div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">WORKFLOW NODES</span>
+        <sc-for list="{{ nodes }}" as="n" hint-placeholder-count="4">
+          <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;padding:10px 12px;display:flex;align-items:center;gap:12px">
+            <span style="width:32px;height:32px;border-radius:9px;background:{{ n.bg }};color:{{ n.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ n.i }}" style="font-size:15px"></i></span>
+            <div><div style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:{{ n.c }}">{{ n.k }}</div><div style="margin-top:4px;font:600 13px/1.2 var(--font-display)">{{ n.l }}</div></div>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">TOASTS</span>
+        <div style="background:#0F172A;color:#FFFFFF;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-pop)"><i class="icon-circle-check" style="font-size:16px;color:#4ADE80"></i><span style="flex:1;font:500 13px/1.3 var(--font-body)">John Smith moved to Meeting</span><span style="font:600 12.5px/1 var(--font-display);color:#93C5F3">Undo</span></div>
+        <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px;box-shadow:var(--shadow-pop)"><i class="icon-sparkles" style="font-size:16px;color:#5B4FD6"></i><span style="flex:1;font:500 13px/1.3 var(--font-body)">AI reply sent to Ahmed on WhatsApp</span><i class="icon-x" style="font-size:14px;color:#94A3B8"></i></div>
+        <div style="background:#FFFFFF;border:1px solid #FBCFCF;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:10px"><i class="icon-circle-alert" style="font-size:16px;color:#DC2626"></i><span style="flex:1;font:500 13px/1.3 var(--font-body)">Couldn't send email. Gmail disconnected.</span><span style="font:600 12.5px/1 var(--font-display);color:#DC2626">Fix</span></div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">TIMELINE ITEM</span>
+        <div style="display:grid;grid-template-columns:30px 1fr;gap:12px">
+          <span style="width:30px;height:30px;border-radius:50%;background:#DCFCE7;color:#15803D;display:flex;align-items:center;justify-content:center"><i class="icon-message-circle" style="font-size:14px"></i></span>
+          <div><div style="display:flex;gap:8px;align-items:center"><span style="font:700 13px/1 var(--font-display)">John</span><span style="font:500 12px/1 var(--font-body);color:#94A3B8">Today — 10:42 AM · WhatsApp</span></div><div style="margin-top:6px;padding:10px 12px;border-radius:4px 14px 14px 14px;background:#F8FAFC;border:1px solid #E5E7EB;font:500 13px/1.5 var(--font-body)">Hi, I need a website for my dental clinic.</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:30px 1fr;gap:12px">
+          <span style="width:30px;height:30px;border-radius:50%;background:#ECEBFD;color:#5B4FD6;display:flex;align-items:center;justify-content:center"><i class="icon-sparkles" style="font-size:14px"></i></span>
+          <div><div style="display:flex;gap:8px;align-items:center"><span style="font:700 13px/1 var(--font-display)">AI</span><span style="font:500 12px/1 var(--font-body);color:#94A3B8">Typing…</span></div><div style="margin-top:8px;display:flex;gap:4px"><span style="width:7px;height:7px;border-radius:50%;background:#A5A0EE;animation:lfPulse 1s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#A5A0EE;animation:lfPulse 1s .2s infinite"></span><span style="width:7px;height:7px;border-radius:50%;background:#A5A0EE;animation:lfPulse 1s .4s infinite"></span></div></div>
+        </div>
+      </div>
+      <div style="grid-column:span 2;background:#E7EBF0;border-radius:20px;padding:24px;display:flex;gap:20px;position:relative;overflow:hidden;min-height:300px">
+        <span style="position:absolute;left:24px;top:24px;font:700 11px/1 var(--font-display);letter-spacing:.08em;color:#64748B">MODAL · DRAWER</span>
+        <div style="margin-top:32px;width:380px;background:#FFFFFF;border-radius:20px;box-shadow:var(--shadow-xl);padding:22px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 17px/1 var(--font-display)">Add lead</span><i class="icon-x" style="font-size:16px;color:#94A3B8"></i></div>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Name" placeholder="Full name" hint-size="100%,64px"></x-import>
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Input" label="Company" placeholder="Company" hint-size="100%,64px"></x-import>
+          <div style="display:flex;justify-content:flex-end;gap:8px"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" variant="ghost" size="sm" hint-size="70px,34px">Cancel</x-import><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Button" size="sm" hint-size="90px,34px">Add lead</x-import></div>
+        </div>
+        <div style="position:absolute;right:0;top:0;bottom:0;width:300px;background:#FFFFFF;box-shadow:-12px 0 40px rgba(15,23,42,.12);padding:20px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px/1 var(--font-display)">Ahmed Khan</span><i class="icon-x" style="font-size:15px;color:#94A3B8"></i></div>
+          <div style="display:flex;gap:6px"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="amber" dot="{{ true }}" size="sm" hint-size="70px,20px">Proposal</x-import><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="red" size="sm" hint-size="60px,20px">Hot · 78</x-import></div>
+          <div style="font:500 12.5px/1.5 var(--font-body);color:#475569">Quick view drawer — opens from any table row without leaving the list.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="states" style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font:800 26px/1 var(--font-display);letter-spacing:-.02em">Empty, loading &amp; error states</h2>
+    <div style="display:grid;grid-template-columns:repeat(3,520px);gap:24px">
+      <sc-for list="{{ empties }}" as="e" hint-placeholder-count="3">
+        <div style="background:#FFFFFF;border-radius:20px;padding:48px 36px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;min-height:340px;justify-content:center">
+          <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;align-self:flex-start;margin:-28px 0 18px -12px">{{ e.tag }}</span>
+          <span style="width:56px;height:56px;border-radius:16px;background:{{ e.bg }};color:{{ e.c }};display:flex;align-items:center;justify-content:center"><i class="icon-{{ e.i }}" style="font-size:24px"></i></span>
+          <span style="font:800 19px/1.2 var(--font-display);letter-spacing:-.015em;color:#0F172A">{{ e.t }}</span>
+          <span style="max-width:340px;font:500 14px/1.55 var(--font-body);color:#64748B;text-wrap:pretty">{{ e.d }}</span>
+          <div style="display:flex;gap:8px;margin-top:6px">
+            <span style="height:38px;padding:0 16px;border-radius:12px;background:{{ e.pBg }};color:#FFFFFF;display:flex;align-items:center;font:600 13.5px/1 var(--font-display)">{{ e.p }}</span>
+            <span style="height:38px;padding:0 16px;border-radius:12px;border:1px solid #CBD5E1;color:#0F172A;display:{{ e.sShow }};align-items:center;font:600 13.5px/1 var(--font-display)">{{ e.s }}</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,520px);gap:24px">
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">LOADING · DASHBOARD</span>
+        <div style="height:22px;width:55%;border-radius:8px;background:#EEF1F5;animation:lfPulse 1.2s infinite"></div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+          <sc-for list="{{ three }}" as="x" hint-placeholder-count="3"><div style="height:96px;border-radius:14px;border:1px solid #F1F5F9;padding:14px;display:flex;flex-direction:column;gap:10px"><div style="height:10px;width:60%;border-radius:5px;background:#EEF1F5;animation:lfPulse 1.2s infinite"></div><div style="height:22px;width:45%;border-radius:6px;background:#EEF1F5;animation:lfPulse 1.2s .1s infinite"></div><div style="height:10px;width:35%;border-radius:5px;background:#EEF1F5;animation:lfPulse 1.2s .2s infinite"></div></div></sc-for>
+        </div>
+        <div style="height:150px;border-radius:14px;border:1px solid #F1F5F9;padding:14px;display:flex;flex-direction:column;gap:10px;justify-content:center">
+          <sc-for list="{{ barsW }}" as="w" hint-placeholder-count="5"><div style="height:14px;width:{{ w }}%;border-radius:5px;background:#EEF1F5;animation:lfPulse 1.2s infinite"></div></sc-for>
+        </div>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:4px">
+        <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8;margin-bottom:10px">LOADING · LEADS TABLE &amp; CONVERSATIONS</span>
+        <sc-for list="{{ rows }}" as="x" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #F8FAFC">
+            <div style="width:32px;height:32px;border-radius:50%;background:#EEF1F5;animation:lfPulse 1.2s infinite"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="height:10px;width:{{ x.a }}%;border-radius:5px;background:#EEF1F5;animation:lfPulse 1.2s .1s infinite"></div><div style="height:8px;width:{{ x.b }}%;border-radius:5px;background:#F3F5F8;animation:lfPulse 1.2s .2s infinite"></div></div>
+            <div style="width:56px;height:20px;border-radius:99px;background:#EEF1F5;animation:lfPulse 1.2s .3s infinite"></div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="background:#FFFFFF;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px">
+        <span style="font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#94A3B8">LOADING · ANALYTICS &amp; AI RESPONSE</span>
+        <div style="height:130px;border-radius:14px;border:1px solid #F1F5F9;padding:14px;display:flex;align-items:flex-end;gap:10px">
+          <sc-for list="{{ colsH }}" as="h" hint-placeholder-count="6"><div style="flex:1;height:{{ h }}%;border-radius:6px 6px 2px 2px;background:#EEF1F5;animation:lfPulse 1.2s infinite"></div></sc-for>
+        </div>
+        <div style="background:#F7F6FF;border:1px solid #ECEBFD;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:10px">
+          <span style="display:flex;align-items:center;gap:6px;font:600 12px/1 var(--font-display);color:#5B4FD6"><i class="icon-sparkles" style="font-size:13px"></i>Analyzing 1,000 leads…</span>
+          <div style="height:10px;width:92%;border-radius:5px;background:#E6E3FB;animation:lfPulse 1.1s infinite"></div>
+          <div style="height:10px;width:76%;border-radius:5px;background:#E6E3FB;animation:lfPulse 1.1s .15s infinite"></div>
+          <div style="height:10px;width:48%;border-radius:5px;background:#E6E3FB;animation:lfPulse 1.1s .3s infinite"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="mobile" style="display:flex;flex-direction:column;gap:20px">
+    <h2 style="margin:0;font:800 26px/1 var(--font-display);letter-spacing:-.02em">Mobile · 390</h2>
+    <div style="display:flex;gap:32px;align-items:flex-start">
+
+      <div data-screen-label="Mobile Home" style="width:390px;height:844px;background:#F8FAFC;border-radius:44px;border:10px solid #0F172A;overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px/1 var(--font-display)"><span>9:41</span><span style="display:flex;gap:5px;font-size:14px"><i class="icon-signal"></i><i class="icon-wifi"></i><i class="icon-battery-full"></i></span></div>
+        <div style="flex:1;overflow:hidden;padding:8px 18px;display:flex;flex-direction:column;gap:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font:500 13px/1 var(--font-body);color:#64748B">Thursday, Oct 2</div><div style="margin-top:6px;font:800 24px/1.1 var(--font-display);letter-spacing:-.02em">Good morning, Sarah 👋</div></div><span style="position:relative;width:44px;height:44px;border-radius:14px;background:#FFFFFF;border:1px solid #E5E7EB;display:flex;align-items:center;justify-content:center"><i class="icon-bell" style="font-size:18px"></i><span style="position:absolute;top:10px;right:11px;width:7px;height:7px;border-radius:50%;background:#EF4444"></span></span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <sc-for list="{{ mKpis }}" as="k" hint-placeholder-count="4"><div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px"><span style="font:600 12px/1 var(--font-display);color:#64748B">{{ k.l }}</span><span style="font:800 22px/1 var(--font-display);letter-spacing:-.02em">{{ k.v }}</span><span style="font:700 11.5px/1 var(--font-display);color:{{ k.c }}">{{ k.d }}</span></div></sc-for>
+          </div>
+          <div style="background:linear-gradient(180deg,#F7F6FF,#FFFFFF);border:1px solid #DEDBFB;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:8px">
+            <span style="display:flex;align-items:center;gap:6px;font:700 10px/1 var(--font-display);letter-spacing:.08em;color:#5B4FD6"><i class="icon-sparkles" style="font-size:12px"></i>AI INSIGHT</span>
+            <span style="font:600 14px/1.45 var(--font-display)">7 qualified leads haven't received a follow-up in the last 24 hours.</span>
+            <span style="font:600 13px/1 var(--font-display);color:#5B4FD6">Review Leads →</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:700 15px/1 var(--font-display)">Today's follow-ups</span><span style="font:600 13px/1 var(--font-display);color:#1E88E5">See all</span></div>
+          <sc-for list="{{ mTasks }}" as="t" hint-placeholder-count="3">
+            <div style="background:#FFFFFF;border:1px solid #E5E7EB;border-radius:14px;padding:12px 14px;display:flex;align-items:center;gap:12px;min-height:56px"><span style="width:22px;height:22px;border-radius:7px;border:1.5px solid #CBD5E1"></span><div style="flex:1"><div style="font:600 14px/1.25 var(--font-display)">{{ t.t }}</div><div style="font:500 12px/1.3 var(--font-body);color:#64748B">{{ t.l }}</div></div><span style="font:700 12px/1 var(--font-display);color:#0F4C81">{{ t.w }}</span></div>
+          </sc-for>
+        </div>
+        <div style="height:84px;background:#FFFFFF;border-top:1px solid #E5E7EB;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px 22px">
+          <sc-for list="{{ nav0 }}" as="n" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:{{ n.c }};font:600 10.5px/1 var(--font-display);position:relative"><i class="icon-{{ n.i }}" style="font-size:21px"></i>{{ n.l }}<span style="position:absolute;top:2px;right:18px;min-width:16px;height:16px;border-radius:8px;background:#EF4444;color:#FFFFFF;font:700 9.5px/16px var(--font-display);text-align:center;display:{{ n.bShow }}">{{ n.b }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div data-screen-label="Mobile Leads" style="width:390px;height:844px;background:#FFFFFF;border-radius:44px;border:10px solid #0F172A;overflow:hidden;display:flex;flex-direction:column">
+        <div style="height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px/1 var(--font-display)"><span>9:41</span><span style="display:flex;gap:5px;font-size:14px"><i class="icon-signal"></i><i class="icon-wifi"></i><i class="icon-battery-full"></i></span></div>
+        <div style="padding:8px 18px 10px;display:flex;flex-direction:column;gap:12px">
+          <div style="display:flex;justify-content:space-between;align-items:center"><span style="font:800 26px/1 var(--font-display);letter-spacing:-.02em">Leads</span><span style="width:44px;height:44px;border-radius:14px;background:#0F4C81;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-plus" style="font-size:20px"></i></span></div>
+          <div style="height:44px;border-radius:12px;background:#F1F5F9;display:flex;align-items:center;gap:8px;padding:0 14px;color:#94A3B8;font:500 14px/1 var(--font-body)"><i class="icon-search" style="font-size:16px"></i>Search leads…</div>
+          <div style="display:flex;gap:6px;overflow:hidden">
+            <sc-for list="{{ mChips }}" as="c" hint-placeholder-count="4"><span style="height:34px;padding:0 14px;border-radius:99px;display:flex;align-items:center;font:600 13px/1 var(--font-display);white-space:nowrap;background:{{ c.bg }};color:{{ c.fg }};border:1px solid {{ c.bd }}">{{ c.l }}</span></sc-for>
+          </div>
+        </div>
+        <div style="flex:1;overflow:hidden">
+          <sc-for list="{{ mLeads }}" as="l" hint-placeholder-count="7">
+            <div style="display:flex;align-items:center;gap:12px;padding:12px 18px;border-bottom:1px solid #F1F5F9;min-height:68px">
+              <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="{{ l.n }}" size="{{ 40 }}" hint-size="40px,40px"></x-import>
+              <div style="flex:1;min-width:0"><div style="display:flex;justify-content:space-between"><span style="font:700 14.5px/1.25 var(--font-display)">{{ l.n }}</span><span style="font:500 12px/1.25 var(--font-body);color:#94A3B8">{{ l.w }}</span></div><div style="font:500 12.5px/1.35 var(--font-body);color:#64748B">{{ l.c }}</div><div style="margin-top:5px;display:flex;gap:6px"><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="{{ l.tt }}" size="sm" hint-size="50px,18px">{{ l.score }} · {{ l.t }}</x-import><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Badge" tone="slate" size="sm" hint-size="60px,18px">{{ l.s }}</x-import></div></div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:84px;background:#FFFFFF;border-top:1px solid #E5E7EB;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px 22px">
+          <sc-for list="{{ nav1 }}" as="n" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:{{ n.c }};font:600 10.5px/1 var(--font-display);position:relative"><i class="icon-{{ n.i }}" style="font-size:21px"></i>{{ n.l }}<span style="position:absolute;top:2px;right:18px;min-width:16px;height:16px;border-radius:8px;background:#EF4444;color:#FFFFFF;font:700 9.5px/16px var(--font-display);text-align:center;display:{{ n.bShow }}">{{ n.b }}</span></div></sc-for>
+        </div>
+      </div>
+
+      <div data-screen-label="Mobile Lead + Stage" style="width:390px;height:844px;background:#F8FAFC;border-radius:44px;border:10px solid #0F172A;overflow:hidden;display:flex;flex-direction:column;position:relative">
+        <div style="height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px/1 var(--font-display)"><span>9:41</span><span style="display:flex;gap:5px;font-size:14px"><i class="icon-signal"></i><i class="icon-wifi"></i><i class="icon-battery-full"></i></span></div>
+        <div style="padding:6px 18px;display:flex;justify-content:space-between;align-items:center"><i class="icon-chevron-left" style="font-size:24px"></i><i class="icon-ellipsis" style="font-size:20px"></i></div>
+        <div style="padding:6px 18px;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center">
+          <x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="John Smith" size="{{ 64 }}" hint-size="64px,64px"></x-import>
+          <span style="font:800 22px/1.2 var(--font-display);letter-spacing:-.02em">John Smith</span>
+          <span style="font:500 13.5px/1 var(--font-body);color:#64748B">ABC Construction</span>
+          <span style="margin-top:4px;font:700 12px/1 var(--font-display);color:#5B4FD6;background:#F4F3FF;border:1px solid #DEDBFB;border-radius:99px;padding:6px 10px">87 / 100 — High Intent</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:14px 18px">
+          <sc-for list="{{ mActions }}" as="a" hint-placeholder-count="4"><div style="height:64px;border-radius:14px;background:#FFFFFF;border:1px solid #E5E7EB;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font:600 11.5px/1 var(--font-display);color:#0F4C81"><i class="icon-{{ a.i }}" style="font-size:18px"></i>{{ a.l }}</div></sc-for>
+        </div>
+        <div style="position:absolute;inset:0;background:rgba(15,23,42,.36)"></div>
+        <div style="position:absolute;left:0;right:0;bottom:0;background:#FFFFFF;border-radius:24px 24px 0 0;padding:10px 18px 30px;display:flex;flex-direction:column;gap:6px">
+          <span style="align-self:center;width:40px;height:5px;border-radius:3px;background:#CBD5E1;margin-bottom:8px"></span>
+          <span style="font:800 18px/1 var(--font-display);margin-bottom:8px">Move to stage</span>
+          <sc-for list="{{ mStages }}" as="s" hint-placeholder-count="7"><div style="height:50px;display:flex;align-items:center;gap:12px;padding:0 14px;border-radius:12px;background:{{ s.bg }};font:600 15px/1 var(--font-display);color:{{ s.fg }}"><span style="width:10px;height:10px;border-radius:50%;background:{{ s.dot }}"></span><span style="flex:1">{{ s.l }}</span><i class="icon-check" style="font-size:18px;display:{{ s.ck }}"></i></div></sc-for>
+        </div>
+      </div>
+
+      <div data-screen-label="Mobile Reply" style="width:390px;height:844px;background:#F8FAFC;border-radius:44px;border:10px solid #0F172A;overflow:hidden;display:flex;flex-direction:column">
+        <div style="height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px/1 var(--font-display);background:#FFFFFF"><span>9:41</span><span style="display:flex;gap:5px;font-size:14px"><i class="icon-signal"></i><i class="icon-wifi"></i><i class="icon-battery-full"></i></span></div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px 14px 12px;background:#FFFFFF;border-bottom:1px solid #E5E7EB"><i class="icon-chevron-left" style="font-size:24px"></i><x-import component-from-global-scope="AutoPilotCRMDesignSystem_9860d1.Avatar" name="Ahmed Khan" size="{{ 36 }}" hint-size="36px,36px"></x-import><div style="flex:1"><div style="font:700 15px/1.2 var(--font-display)">Ahmed Khan</div><div style="font:500 12px/1.3 var(--font-body);color:#16A34A">WhatsApp</div></div><i class="icon-phone" style="font-size:19px;color:#0F4C81"></i></div>
+        <div style="flex:1;padding:16px 14px;display:flex;flex-direction:column;gap:10px;overflow:hidden">
+          <sc-for list="{{ mThread }}" as="m" hint-placeholder-count="4"><div style="align-self:{{ m.a }};max-width:82%;padding:10px 13px;border-radius:{{ m.r }};background:{{ m.bg }};color:{{ m.fg }};border:1px solid {{ m.bd }};font:500 14px/1.45 var(--font-body)">{{ m.t }}</div></sc-for>
+        </div>
+        <div style="background:#FFFFFF;border-top:1px solid #E5E7EB;padding:12px 14px 30px;display:flex;flex-direction:column;gap:10px">
+          <div style="background:#F7F6FF;border:1px solid #DEDBFB;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:10px">
+            <span style="display:flex;align-items:center;gap:6px;font:700 11.5px/1 var(--font-display);color:#5B4FD6"><i class="icon-sparkles" style="font-size:13px"></i>Suggested reply</span>
+            <span style="font:500 14px/1.45 var(--font-body)">Absolutely — I'll send the full pricing breakdown by 2 PM today. Does a 15-minute call tomorrow work to walk through it?</span>
+            <div style="display:flex;gap:6px"><span style="height:36px;padding:0 14px;border-radius:10px;background:#5B4FD6;color:#FFFFFF;display:flex;align-items:center;font:600 13px/1 var(--font-display)">Insert</span><span style="height:36px;padding:0 12px;border-radius:10px;border:1px solid #DEDBFB;background:#FFFFFF;color:#4C41C2;display:flex;align-items:center;font:600 13px/1 var(--font-display)">Shorter</span><span style="height:36px;padding:0 12px;border-radius:10px;border:1px solid #DEDBFB;background:#FFFFFF;color:#4C41C2;display:flex;align-items:center;font:600 13px/1 var(--font-display)">Friendlier</span></div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center"><div style="flex:1;height:44px;border-radius:22px;background:#F1F5F9;display:flex;align-items:center;padding:0 16px;font:500 14px/1 var(--font-body);color:#94A3B8">Write a message...</div><span style="width:44px;height:44px;border-radius:50%;background:#0F4C81;color:#FFFFFF;display:flex;align-items:center;justify-content:center"><i class="icon-send-horizontal" style="font-size:18px"></i></span></div>
+        </div>
+      </div>
+
+      <div data-screen-label="Mobile Notifications" style="width:390px;height:844px;background:#FFFFFF;border-radius:44px;border:10px solid #0F172A;overflow:hidden;display:flex;flex-direction:column">
+        <div style="height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 24px;font:600 14px/1 var(--font-display)"><span>9:41</span><span style="display:flex;gap:5px;font-size:14px"><i class="icon-signal"></i><i class="icon-wifi"></i><i class="icon-battery-full"></i></span></div>
+        <div style="padding:8px 18px 12px;display:flex;justify-content:space-between;align-items:center"><span style="font:800 26px/1 var(--font-display);letter-spacing:-.02em">Notifications</span><span style="font:600 13px/1 var(--font-display);color:#1E88E5">Mark all read</span></div>
+        <div style="flex:1;overflow:hidden">
+          <sc-for list="{{ mNotifs }}" as="n" hint-placeholder-count="6">
+            <div style="display:flex;gap:12px;padding:14px 18px;border-bottom:1px solid #F1F5F9;background:{{ n.bg }}">
+              <span style="width:38px;height:38px;border-radius:12px;background:{{ n.ibg }};color:{{ n.ic }};display:flex;align-items:center;justify-content:center;flex-shrink:0"><i class="icon-{{ n.i }}" style="font-size:17px"></i></span>
+              <div style="flex:1"><div style="font:600 14px/1.35 var(--font-display)">{{ n.t }}</div><div style="margin-top:2px;font:500 12.5px/1.4 var(--font-body);color:#64748B">{{ n.d }}</div><div style="margin-top:8px;display:{{ n.aShow }};gap:6px"><span style="height:34px;padding:0 12px;border-radius:10px;background:#0F4C81;color:#FFFFFF;display:flex;align-items:center;font:600 12.5px/1 var(--font-display)">{{ n.a }}</span></div></div>
+              <span style="font:500 11.5px/1.3 var(--font-body);color:#94A3B8">{{ n.w }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="height:84px;background:#FFFFFF;border-top:1px solid #E5E7EB;display:grid;grid-template-columns:repeat(5,1fr);padding:8px 6px 22px">
+          <sc-for list="{{ nav0 }}" as="n" hint-placeholder-count="5"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;color:{{ n.c }};font:600 10.5px/1 var(--font-display);position:relative"><i class="icon-{{ n.i }}" style="font-size:21px"></i>{{ n.l }}<span style="position:absolute;top:2px;right:18px;min-width:16px;height:16px;border-radius:8px;background:#EF4444;color:#FFFFFF;font:700 9.5px/16px var(--font-display);text-align:center;display:{{ n.bShow }}">{{ n.b }}</span></div></sc-for>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const swatches = [['Deep Blue','#0F4C81','Primary actions, identity'],['Bright Blue','#1E88E5','Links, focus, charts'],['AI Violet','#5B4FD6','AI surfaces only'],['Success','#16A34A','Won, connected, positive'],['Danger','#DC2626','Overdue, errors'],['Background','#F8FAFC','App canvas'],['Card','#FFFFFF','Surfaces'],['Text','#0F172A','Headings, body'],['Secondary text','#64748B','Meta, labels'],['Border','#E5E7EB','Dividers, inputs']].map(([n, hex, use]) => ({ n, hex, use }));
+    const typeScale = [['Display 64','800 40px/1.05 var(--font-display)','-.035em','Never lose a lead'],['H1 28','800 28px/1.15 var(--font-display)','-.025em','Good morning, Sarah'],['H2 20','700 20px/1.2 var(--font-display)','-.015em','Lead funnel'],['Card title 15','700 15px/1.2 var(--font-display)','0','AI Insights'],['Body 14','500 14px/1.5 var(--font-body)','0','Follow up within the next 4 hours.'],['Label 11','700 11px/1 var(--font-display)','.08em','RECOMMENDED ACTION']].map(([k, f, ls, s]) => ({ k, f, ls, s }));
+    const radii = [['6','6px'],['10','10px'],['14','14px'],['18','18px']].map(([k, v]) => ({ k, v }));
+    const stageBadges = [['New','slate'],['Contacted','blue'],['Qualified','navy'],['Meeting','violet'],['Proposal','amber'],['Won','emerald'],['Lost','red']].map(([l, t]) => ({ l, t }));
+    const menu = [['Assign to…','user-round-check','#334155'],['Change stage','arrow-right-left','#334155','#F1F5F9'],['Add tag','tag','#334155'],['Delete lead','trash-2','#DC2626']].map(([l, i, c, bg]) => ({ l, i, c, bg: bg || 'transparent' }));
+    const K = { WHEN: ['#0F4C81','#E3EFFB'], WAIT: ['#64748B','#F1F5F9'], IF: ['#B45309','#FEF3C7'], THEN: ['#15803D','#DCFCE7'] };
+    const nodes = [['WHEN','Lead becomes Qualified','user-check'],['WAIT','24 hours','hourglass'],['IF','No response','git-branch'],['THEN','Send WhatsApp Message','message-circle']].map(([k, l, i]) => ({ k, l, i, c: K[k][0], bg: K[k][1] }));
+    return { ...this.more(), swatches, typeScale, radii, spaces: [4,8,12,16,24,32,48], stageOpts: ['Qualified','Meeting','Proposal'], stageBadges, tabsU: ['Overview','Activity','Deals'], tabsP: ['Day','Week','Month'], menu, nodes };
+  }
+  more() { return { ...this.states(), ...this.mobile() }; }
+  states() {
+    const empties = [
+      ['EMPTY · LEADS','users','#0F4C81','#EEF5FD','No leads yet','Connect your website or import your leads to get started.','Connect Lead Source','Import CSV','#0F4C81'],
+      ['EMPTY · TASKS','circle-check-big','#15803D','#F0FDF4','You\'re all caught up','No follow-ups due today. New tasks appear here when leads need attention.','Create task','','#0F4C81'],
+      ['ERROR · SYNC','refresh-cw-off','#DC2626','#FEF2F2','Sync paused','Something went wrong while syncing your leads.','Try Again','View Integration','#0F4C81'],
+    ].map(([tag, i, c, bg, t, d, p, s, pBg]) => ({ tag, i, c, bg, t, d, p, s, pBg, sShow: s ? 'flex' : 'none' }));
+    return { empties, three: [1,2,3], barsW: [92,70,48,30,16], rows: [[38,60],[44,52],[30,64],[50,40],[34,58],[42,48]].map(([a, b]) => ({ a, b })), colsH: [40,62,50,78,58,88] };
+  }
+  mobile() {
+    const navFor = (a) => [['Home','house'],['Leads','users'],['Inbox','inbox',6],['Tasks','circle-check-big',7],['More','menu']].map(([l, i, b], k) => ({ l, i, b, bShow: b ? 'block' : 'none', c: k === a ? '#0F4C81' : '#94A3B8' }));
+    const mKpis = [['New Leads','42','▲ 18.4%','#15803D'],['Qualified','18','▲ 12.2%','#15803D'],['Follow-ups Due','7','3 overdue','#DC2626'],['Pipeline','$24.5k','▲ 21.5%','#15803D']].map(([l, v, d, c]) => ({ l, v, d, c }));
+    const mTasks = [['Call John','John Smith · ABC Construction','10:00'],['Send proposal to Ahmed','Brightsmile Dental','11:30'],['Follow up with Sarah','Northwind Realty','2:00']].map(([t, l, w]) => ({ t, l, w }));
+    const mChips = [['All',1],['High intent'],['Mine'],['Unassigned']].map(([l, on]) => ({ l, bg: on ? '#0F4C81' : '#FFFFFF', fg: on ? '#FFFFFF' : '#334155', bd: on ? '#0F4C81' : '#E5E7EB' }));
+    const tt = s => s >= 85 ? ['High Intent','violet'] : s >= 70 ? ['Hot','red'] : s >= 45 ? ['Warm','amber'] : ['Cold','blue'];
+    const mLeads = [['John Smith','ABC Construction',87,'Qualified','2h'],['Ahmed Khan','Brightsmile Dental',78,'Proposal','35m'],['Emily Carter','Carter & Co. Law',91,'Meeting','1h'],['Sarah Lee','Northwind Realty',64,'Contacted','5h'],['Priya Nair','Lumen Yoga Studio',52,'Contacted','1d'],['Marco Rossi','Rossi Auto Body',41,'New','12m'],['Grace Okafor','Okafor Logistics',73,'Qualified','3h']].map(([n, c, score, s, w]) => ({ n, c, score, s, w, t: tt(score)[0], tt: tt(score)[1] }));
+    const mActions = [['Call','phone'],['Message','message-circle'],['Email','mail'],['Meet','calendar-plus']].map(([l, i]) => ({ l, i }));
+    const mStages = [['New','#94A3B8'],['Contacted','#1E88E5'],['Qualified','#0F4C81'],['Meeting','#5B4FD6',1],['Proposal','#D97706'],['Won','#16A34A'],['Lost','#DC2626']].map(([l, dot, on]) => ({ l, dot, bg: on ? '#EEF5FD' : 'transparent', fg: on ? '#0F4C81' : '#0F172A', ck: on ? 'inline' : 'none' }));
+    const mThread = [['in','Around 6 pages. We use Dentrix for scheduling.'],['out','Perfect — we\'ve integrated Dentrix before. I\'ll put a proposal together today.'],['in','Can you send the pricing breakdown today?']].map(([k, t]) => ({ t, a: k === 'in' ? 'flex-start' : 'flex-end', bg: k === 'in' ? '#FFFFFF' : '#0F4C81', fg: k === 'in' ? '#0F172A' : '#FFFFFF', bd: k === 'in' ? '#E5E7EB' : '#0F4C81', r: k === 'in' ? '4px 16px 16px 16px' : '16px 4px 16px 16px' }));
+    const mNotifs = [
+      ['flame','#DC2626','#FEF2F2','New high-intent lead','Emily Carter · Google Ads · score 91','2m','Call now',1],
+      ['message-circle','#15803D','#F0FDF4','Ahmed replied on WhatsApp','“Can you send the pricing breakdown today?”','8m','Reply',1],
+      ['clock','#B45309','#FEF7EA','Follow-up overdue','Priya Nair · Lumen Yoga Studio','1h','',0],
+      ['sparkles','#5B4FD6','#F4F3FF','AI drafted 3 follow-ups','Review and send from your inbox','2h','',0],
+      ['trophy','#15803D','#F0FDF4','Deal won — Dupont Florals','$4,200 · closed by Maya','Yesterday','',0],
+    ].map(([i, ic, ibg, t, d, w, a, unread]) => ({ i, ic, ibg, t, d, w, a, aShow: a ? 'flex' : 'none', bg: unread ? '#F7FAFE' : '#FFFFFF' }));
+    return { nav0: navFor(0), nav1: navFor(1), mKpis, mTasks, mChips, mLeads, mActions, mStages, mThread, mNotifs };
+  }
+}
+</script>
+</body>
+</html>
